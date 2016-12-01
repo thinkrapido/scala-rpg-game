@@ -1,0 +1,22 @@
+
+# What to learn
+
+- Input Polling
+
+- Camera Handling / Render Loop / Screens
+
+- Texture loading / rendering
+
+- Maps loading / rendering
+
+- Rendering of layers
+
+- Graphics Library
+
+- Asset Management / File loading
+
+- gradle
+
+
+
+# Accomplished
