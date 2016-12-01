@@ -7,6 +7,6 @@ trait Entity {
 
   val UUID: String = java.util.UUID.randomUUID.toString
 
-  def persist[T](payload: Payload[T]): Unit
+  def handle[T](payload: Payload[T]): Unit
 
 }

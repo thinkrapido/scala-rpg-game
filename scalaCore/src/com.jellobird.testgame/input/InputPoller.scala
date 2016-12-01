@@ -1,13 +1,6 @@
-package com.jellobird.testgame
+package com.jellobird.testgame.input
 
 import akka.actor.{Actor, PoisonPill}
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input.Keys
-
-import scala.concurrent.duration._
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import ScalaBludBourne._
 
 /**
   * Created by jbc on 26.11.16.

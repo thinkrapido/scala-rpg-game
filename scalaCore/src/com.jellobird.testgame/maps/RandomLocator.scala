@@ -1,5 +1,6 @@
 package com.jellobird.testgame.maps
 import com.badlogic.gdx.math.Vector2
+import com.jellobird.testgame.maps.LocationsRepository.AbsolutePos
 import com.jellobird.testgame.storage.Payload
 
 /**
@@ -7,30 +8,13 @@ import com.jellobird.testgame.storage.Payload
   */
 class RandomLocator(private val _map: Map) extends LocationEntity {
 
-  override protected var _curr: Vector2 = _
-  override protected var _next: Vector2 = _
+  override protected var _curr: Vector2 = new Vector2(_map.width / 2, _map.height / 2)
+  override protected var _next: Vector2 = _curr
 
-  _curr = randomLoc
-
-
-  private var count = 0
-
-  override def persist[T](payload: Payload[T]) = {}
-
-  override protected def calcNextLocationAlgorithm(elapsed: Float): Unit = {
-    count += 1
-
-    if (count % 120 == 0) {
-      randomLoc
+  override def handle[T](payload: Payload[T]) = {
+    payload match {
+      case AbsolutePos(vec, _) => _next = vec
     }
-  }
-
-  private def randomLoc: Vector2 = {
-    _next = new Vector2(
-      (_map.width * Math.random()).asInstanceOf[Float],
-      (_map.height * Math.random()).asInstanceOf[Float]
-    )
-    _next
   }
 
 }
