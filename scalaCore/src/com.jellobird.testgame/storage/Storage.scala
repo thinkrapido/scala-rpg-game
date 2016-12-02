@@ -3,8 +3,8 @@ package com.jellobird.testgame.storage
 import akka.actor.{ActorSystem, Props}
 import com.badlogic.gdx.Screen
 import com.jellobird.testgame.assets.AssetManager
-import com.jellobird.testgame.maps.{LocationsRepository, LocationsRepositoryActor}
 import com.jellobird.testgame.screen.{Camera, MainGameScreen}
+import com.jellobird.testgame.storage.repositories.{LocationsRepository, LocationsRepositoryActor}
 
 /**
   * Created by jbc on 01.12.16.

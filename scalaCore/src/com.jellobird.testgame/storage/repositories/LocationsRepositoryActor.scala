@@ -1,4 +1,4 @@
-package com.jellobird.testgame.maps
+package com.jellobird.testgame.storage.repositories
 
 import akka.actor.Actor
 

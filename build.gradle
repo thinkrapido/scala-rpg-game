@@ -75,6 +75,8 @@ project(":scalaCore") {
 
         compile "com.typesafe.akka:akka-actor_2.12:$akkaVersion"
 
+        compile "org.scalaz:scalaz-core_2.11:7.2.7"
+
     }
 }
 

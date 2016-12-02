@@ -4,13 +4,15 @@ import akka.actor.{Actor, ActorRef}
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.{Game, Gdx}
 import com.jellobird.testgame.assets.AssetManager
-import com.jellobird.testgame.maps.LocationsRepository.AbsolutePos
+import com.jellobird.testgame.input.InputObserver
+import com.jellobird.testgame.storage.repositories.LocationsRepository.AbsolutePos
 import com.jellobird.testgame.maps.Map.MapEnum
 import com.jellobird.testgame.maps.RandomLocator
 import com.jellobird.testgame.storage.Storage
 import com.jellobird.testgame.storage.Storage.ScreenType._
 import com.jellobird.testgame.screen.GameScreen
 import com.jellobird.testgame.maps.Map
+
 import scala.concurrent.duration._
 
 /**
@@ -51,15 +53,18 @@ class ScalaBludBourne extends Game {
         Storage.currentScreen = x
         setScreen(x)
         Gdx.app.debug(TAG, "screen set")
-        val locator = new RandomLocator(x.map)
-        randomPosGenerator = new RandomPosGenerator(locator.UUID, Storage.locationsRef, x.map)
-        Storage.camera.setLocationEntity(locator)
-        Storage.locations.add(locator)
       case None =>
         Gdx.app.debug(TAG, "screen not set")
       case _ =>
     }
 
+  }
+
+  def randomRelocation(x: GameScreen) = {
+    val locator = new RandomLocator(x.map)
+    randomPosGenerator = new RandomPosGenerator(locator.UUID, Storage.locationsRef, x.map)
+    Storage.camera.setLocationEntity(locator)
+    Storage.locations.add(locator)
   }
 
   override def dispose(): Unit = {
@@ -77,5 +82,11 @@ class ScalaBludBourne extends Game {
     Storage.assetManager = assetManagerHelper
     assetManagerHelper = null
   }
+
+}
+
+object ScalaBludBourne {
+
+  val inputObserver = new InputObserver()
 
 }

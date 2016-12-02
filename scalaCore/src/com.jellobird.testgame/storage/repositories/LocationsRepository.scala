@@ -1,6 +1,7 @@
-package com.jellobird.testgame.maps
+package com.jellobird.testgame.storage.repositories
 
 import com.badlogic.gdx.math.Vector2
+import com.jellobird.testgame.maps.LocationEntity
 import com.jellobird.testgame.storage.{Payload, Repository}
 
 /**

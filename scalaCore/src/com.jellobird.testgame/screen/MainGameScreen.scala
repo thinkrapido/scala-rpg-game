@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.utils.Disposable
-import com.jellobird.testgame.input.InputHandler
+import com.jellobird.testgame.ScalaBludBourne
 import com.jellobird.testgame.maps.TopWorldMap
 import com.jellobird.testgame.storage.Storage
 
@@ -26,7 +26,7 @@ class MainGameScreen extends GameScreen {
       println(map.tilePixelWidth)
       renderer = new OrthogonalTiledMapRenderer(map.tiledMap, 1/map.tilePixelWidth);
     }
-    Gdx.input.setInputProcessor(new InputHandler(this))
+    Gdx.input.setInputProcessor(ScalaBludBourne.inputObserver)
     Storage.camera.setToOrtho(false, viewport.width, viewport.height);
   }
 

@@ -1,6 +1,6 @@
 package com.jellobird.testgame.maps
 import com.badlogic.gdx.math.Vector2
-import com.jellobird.testgame.maps.LocationsRepository.AbsolutePos
+import com.jellobird.testgame.storage.repositories.LocationsRepository.AbsolutePos
 import com.jellobird.testgame.storage.Payload
 
 /**
