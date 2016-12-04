@@ -20,7 +20,8 @@ class InputObserver extends InputProcessor {
   def removeListener(actor: ActorRef) = actors = actors - actor
   def notifyActors: Unit = {
     val recentEvents = InputKeyState.keyStates.filter(_.count > 0).map(_.copy)
-    if ( recentEvents.size > 0) actors.foreach{ _ ! new KeyEvents(recentEvents) }
+    actors.foreach{ _ ! new KeyEvents(recentEvents) }
+    println("recent events: %d".format(recentEvents.count(_ => true)))
   }
 
   implicit val ec = ExecutionContext.global
@@ -31,6 +32,8 @@ class InputObserver extends InputProcessor {
   def collectInputs: Unit = InputKeyState.keyStates.foreach(_.++)
 
   def reset: Unit = InputKeyState.keyStates.foreach(_.!)
+
+  def clear: Unit = actors = HashSet[ActorRef]()
 
   override def keyTyped(character: Char): Boolean = false
 

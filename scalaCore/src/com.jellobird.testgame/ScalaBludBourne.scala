@@ -1,6 +1,6 @@
 package com.jellobird.testgame
 
-import akka.actor.{Actor, ActorRef}
+import akka.actor.{Actor, ActorRef, Props}
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.{Game, Gdx}
 import com.jellobird.testgame.assets.AssetManager
@@ -10,8 +10,9 @@ import com.jellobird.testgame.maps.Map.MapEnum
 import com.jellobird.testgame.maps.RandomLocator
 import com.jellobird.testgame.storage.Storage
 import com.jellobird.testgame.storage.Storage.ScreenType._
-import com.jellobird.testgame.screen.GameScreen
+import com.jellobird.testgame.screen.{CameraLocator, GameScreen}
 import com.jellobird.testgame.maps.Map
+import com.jellobird.testgame.player.{Player, PlayerLocator}
 
 import scala.concurrent.duration._
 
@@ -53,11 +54,23 @@ class ScalaBludBourne extends Game {
         Storage.currentScreen = x
         setScreen(x)
         Gdx.app.debug(TAG, "screen set")
+        setPlayerOnMap(x)
       case None =>
         Gdx.app.debug(TAG, "screen not set")
       case _ =>
     }
 
+  }
+
+  def setPlayerOnMap(x: GameScreen) = {
+    val playerLocator = new PlayerLocator(x.map.startPosition)
+    Storage.locations.add(playerLocator)
+
+    val playerRef = Storage.actorSystem.actorOf(Props(new Player(playerLocator)), "player")
+    val locator = new CameraLocator(playerLocator, x.map)
+    Storage.camera.setLocationEntity(locator)
+    Storage.locations.add(locator)
+    ScalaBludBourne.inputObserver.addListener(playerRef)
   }
 
   def randomRelocation(x: GameScreen) = {

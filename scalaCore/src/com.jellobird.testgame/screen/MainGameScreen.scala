@@ -20,14 +20,12 @@ class MainGameScreen extends GameScreen {
   override val map = new TopWorldMap()
 
   override def show(): Unit = {
-    if( renderer == null ){
-      println(map.pixelWidth)
-      println(map.width)
-      println(map.tilePixelWidth)
+    if( renderer == null ) {
       renderer = new OrthogonalTiledMapRenderer(map.tiledMap, 1/map.tilePixelWidth);
     }
     Gdx.input.setInputProcessor(ScalaBludBourne.inputObserver)
     Storage.camera.setToOrtho(false, viewport.width, viewport.height);
+    map.startPosition
   }
 
   override def render(elapsed: Float): Unit = {

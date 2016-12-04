@@ -2,6 +2,8 @@ package com.jellobird.testgame.maps
 
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import Map._
+import com.badlogic.gdx.maps.{MapLayer, MapObject, MapProperties}
+import com.badlogic.gdx.math.Vector2
 import com.jellobird.testgame.storage.Storage
 /**
   * Created by jbc on 27.11.16.
@@ -18,6 +20,32 @@ abstract class Map(val currentMap: MapEnum.Value) {
   val pixelWidth: Float = width * tilePixelWidth
   val pixelHeight: Float = height * tilePixelHeight
 
+  def getCoordinatesFromMapObject(obj: MapObject): Vector2 = {
+    val props = obj.getProperties
+    val x = props.get("x").asInstanceOf[Float]
+    val y = props.get("y").asInstanceOf[Float]
+    new Vector2(x / tilePixelWidth, y / tilePixelHeight)
+  }
+
+  def startPosition: Vector2 = {
+    val objects = tiledMap.getLayers().get(Layer.SPAWNS_LAYER.toString()).getObjects()
+    getCoordinatesFromMapObject(objects.get("START"))
+  }
+
+  def getNearestSpawnPosition(ref: Vector2): Vector2 = {
+    val iter = tiledMap.getLayers().get(Layer.SPAWNS_LAYER.toString()).getObjects().iterator()
+    var out = new Vector2(width * width, height * height)
+    if (iter.hasNext) {
+      while(iter.hasNext) {
+        val coords = getCoordinatesFromMapObject(iter.next())
+        if (ref.dst(coords) < ref.dst(out)) out = coords
+      }
+    }
+    else {
+      out = ref
+    }
+    out
+  }
 
 }
 

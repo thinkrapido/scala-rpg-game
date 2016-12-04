@@ -382,11 +382,11 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup name="MAP_SPAWNS_LAYER" visible="0">
-  <object id="391" name="PLAYER_START" x="256" y="848" width="16" height="16"/>
-  <object id="398" name="PLAYER_START" x="832" y="144" width="16" height="16"/>
+ <objectgroup name="MAP_SPAWNS_LAYER">
+  <object id="391" name="START" x="256" y="848" width="16" height="16"/>
+  <object id="398" name="CASTLE_OF_DOOM" x="832" y="144" width="16" height="16"/>
  </objectgroup>
- <objectgroup name="MAP_PORTAL_LAYER" visible="0">
+ <objectgroup name="MAP_PORTAL_LAYER">
   <object id="396" name="CASTLE_OF_DOOM" x="880" y="144" width="16" height="16"/>
   <object id="397" name="TOWN" x="208" y="848" width="16" height="16"/>
  </objectgroup>
@@ -470,7 +470,7 @@
  <imagelayer name="MAP_LIGHTMAP_LAYER_AFTERNOON" visible="0">
   <image source="topworld_lightmap_afternoon.png" width="1200" height="1200"/>
  </imagelayer>
- <objectgroup name="PARTICLE_EFFECT_SPAWN_LAYER">
+ <objectgroup name="PARTICLE_EFFECT_SPAWN_LAYER" visible="0">
   <object id="428" name="LANTERN_FIRE" x="246" y="839" width="4" height="4"/>
   <object id="431" name="LANTERN_FIRE" x="246" y="839" width="4" height="4"/>
   <object id="432" name="LANTERN_FIRE" x="598" y="871" width="4" height="4"/>

@@ -7,7 +7,7 @@ import com.badlogic.gdx.Input.Keys
 /**
   * Created by jbc on 02.12.16.
   */
-class InputKeyState(val key: Int, startState: State.Value = State.LOW) {
+case class InputKeyState(val key: Int, startState: State.Value = State.LOW) {
 
   import InputKeyState.State._
 

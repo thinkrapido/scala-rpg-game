@@ -15,6 +15,7 @@ object LocationsRepository {
   case class RegisterEntity(override val payload: LocationEntity) extends Payload(payload, null)
   case class AbsolutePos(override val payload: Vector2, override val uuid: String) extends Payload(payload, uuid)
   case class DeltaPos(override val payload: Vector2, override val uuid: String) extends Payload(payload, uuid)
+  case class NewProxy(override val payload: String, override val uuid: String) extends Payload(payload, uuid)
 
 }
 

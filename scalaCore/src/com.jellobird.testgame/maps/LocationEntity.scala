@@ -11,8 +11,8 @@ trait LocationEntity extends Entity {
   import LocationEntity._
   import LocationEntity.CollisionMethodEnum._
 
-  protected var _curr: Vector2
-  protected var _next: Vector2
+  var _curr: Vector2
+  var _next: Vector2
 
   def curr(): Vector2 = _curr
   
