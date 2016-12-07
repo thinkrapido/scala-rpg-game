@@ -34,7 +34,7 @@ allprojects {
 }
 
 project(":desktop") {
-    apply plugin: "java"
+    apply plugin: "scala"
 
 
     dependencies {
@@ -45,19 +45,6 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
     }
 }
-
-/*
-project(":core") {
-    apply plugin: "java"
-
-
-    dependencies {
-        compile project(":scalaCore")
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-    }
-}
-*/
 
 project(":scalaCore") {
     apply plugin: "scala"

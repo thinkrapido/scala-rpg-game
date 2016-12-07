@@ -8,8 +8,8 @@ import com.jellobird.testgame.storage.Payload
   */
 class RandomLocator(private val _map: Map) extends LocationEntity {
 
-  override protected var _curr: Vector2 = new Vector2(_map.width / 2, _map.height / 2)
-  override protected var _next: Vector2 = _curr
+  override var _curr: Vector2 = new Vector2(_map.width / 2, _map.height / 2)
+  override var _next: Vector2 = _curr
 
   override def handle[T](payload: Payload[T]) = {
     payload match {
