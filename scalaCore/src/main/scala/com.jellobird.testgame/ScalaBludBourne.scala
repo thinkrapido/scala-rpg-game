@@ -1,19 +1,17 @@
 package com.jellobird.testgame
 
-import akka.actor.{Actor, ActorRef, Props}
-import com.badlogic.gdx.math.Vector2
+import akka.actor.Props
 import com.badlogic.gdx.{Game, Gdx}
 import com.jellobird.testgame.assets.AssetManager
 import com.jellobird.testgame.input.InputObserver
 import com.jellobird.testgame.maps.Map.MapEnum
-import com.jellobird.testgame.maps.{Map, ProxyLocation}
+import com.jellobird.testgame.maps.ProxyLocation
 import com.jellobird.testgame.storage.Storage
 import com.jellobird.testgame.storage.Storage.ScreenType._
 import com.jellobird.testgame.screen.GameScreen
 import com.jellobird.testgame.player.{Player, PlayerLocation}
 import com.jellobird.testgame.storage.registry.LocationRegistry.Register
-
-import scala.concurrent.duration._
+import com.jellobird.testgame.storage.registry.LocationRegistry.Set
 
 /**
   * Created by jbc on 26.11.16.
@@ -45,6 +43,7 @@ class ScalaBludBourne extends Game {
 
   def setPlayerOnMap(x: GameScreen) = {
     val playerLocator = Storage.actorSystem.actorOf(Props(new PlayerLocation(x.map.startPosition)))
+    playerLocator ! Set(null, "next", x.map.startPosition)
     Storage.locations ! Register(playerLocator)
 
     val playerRef = Storage.actorSystem.actorOf(Props(new Player(playerLocator)), "player")

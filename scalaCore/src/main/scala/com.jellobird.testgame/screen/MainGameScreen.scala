@@ -23,7 +23,6 @@ class MainGameScreen extends GameScreen {
     if( renderer == null ) {
       renderer = new OrthogonalTiledMapRenderer(map.tiledMap, 1/map.tilePixelWidth);
     }
-    Gdx.input.setInputProcessor(ScalaBludBourne.inputObserver)
     Storage.camera.setToOrtho(false, viewport.width, viewport.height);
     map.startPosition
   }

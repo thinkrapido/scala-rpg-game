@@ -20,13 +20,18 @@ class InputObserver extends InputProcessor {
   def removeListener(actor: ActorRef) = actors = actors - actor
   def notifyActors: Unit = {
     val recentEvents = InputKeyState.keyStates.filter(_.count > 0).map(_.copy)
-    actors.foreach{ _ ! new KeyEvents(recentEvents) }
-    println("recent events: %d".format(recentEvents.count(_ => true)))
+    if(recentEvents.size > 0) {
+      InputKeyState.keyStates.foreach(_.!)
+      actors.foreach{ _ ! new KeyEvents(recentEvents) }
+    }
   }
 
   implicit val ec = ExecutionContext.global
   Storage.actorSystem.scheduler.schedule(1.seconds, 3.milliseconds) {
     collectInputs
+  }
+  Storage.actorSystem.scheduler.schedule(1.seconds, 16.milliseconds) {
+    notifyActors
   }
 
   def collectInputs: Unit = InputKeyState.keyStates.foreach(_.++)

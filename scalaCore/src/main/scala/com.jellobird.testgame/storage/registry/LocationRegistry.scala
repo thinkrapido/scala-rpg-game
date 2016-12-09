@@ -47,6 +47,8 @@ class LocationRegistry extends Actor {
           actorRef ! x
         case _ =>
       }
+    case x @ Process(_, _, _) =>
+      hash.values.foreach(_ ! x)
   }
 }
 

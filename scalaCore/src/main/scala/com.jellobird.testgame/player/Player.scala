@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.math.Vector2
 import com.jellobird.testgame.input.InputEvents.KeyEvents
 import com.jellobird.testgame.input.InputKeyState
+import com.jellobird.testgame.storage.registry.LocationRegistry.Set
 
 /**
   * Created by jbc on 04.12.16.

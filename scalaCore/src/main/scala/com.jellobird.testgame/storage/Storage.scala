@@ -3,15 +3,15 @@ package com.jellobird.testgame.storage
 import akka.actor.{ActorSystem, Props}
 import com.badlogic.gdx.Screen
 import com.jellobird.testgame.assets.AssetManager
-import com.jellobird.testgame.maps.Location
 import com.jellobird.testgame.screen.{Camera, MainGameScreen}
+import com.jellobird.testgame.storage.registry.LocationRegistry
 
 /**
   * Created by jbc on 01.12.16.
   */
 private[this] class Storage {
 
-  var locations = Storage.actorSystem.actorOf(Props[Location])
+  var locations = Storage.actorSystem.actorOf(Props[LocationRegistry])
 
 }
 
