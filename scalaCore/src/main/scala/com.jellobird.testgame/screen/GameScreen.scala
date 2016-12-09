@@ -2,19 +2,19 @@ package com.jellobird.testgame.screen
 
 import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
-import com.jellobird.testgame.maps.{LocationEntity, Map, RandomLocator}
+import com.jellobird.testgame.maps.{Location$, Map}
 import com.jellobird.testgame.storage.Storage
+import com.jellobird.testgame.storage.registry.LocationRegistry.Process
 
 trait GameScreen extends ScreenAdapter {
 
   private val TAG = classOf[GameScreen].getSimpleName
 
   protected var renderer: OrthogonalTiledMapRenderer = null
-  private var locator: LocationEntity = null
   val map: Map
 
   override def render(elapsed: Float): Unit = {
-    Storage.locations.all().foreach { _.calcNextLocation(elapsed) }
+    Storage.locations ! Process(null, "calcNextLocation", elapsed)
   }
 
   def viewportDimension = VIEWPORT.viewport

@@ -3,18 +3,15 @@ package com.jellobird.testgame.storage
 import akka.actor.{ActorSystem, Props}
 import com.badlogic.gdx.Screen
 import com.jellobird.testgame.assets.AssetManager
+import com.jellobird.testgame.maps.Location
 import com.jellobird.testgame.screen.{Camera, MainGameScreen}
-import com.jellobird.testgame.storage.repositories.{LocationsRepository, LocationsRepositoryActor}
 
 /**
   * Created by jbc on 01.12.16.
   */
 private[this] class Storage {
 
-  import Storage._
-
-  var locations: LocationsRepository = new LocationsRepository
-  val locationsRef = actorSystem.actorOf(Props(new LocationsRepositoryActor(locations)), "locations")
+  var locations = Storage.actorSystem.actorOf(Props[Location])
 
 }
 
@@ -24,8 +21,7 @@ object Storage {
 
   private[this] val storage = new Storage
 
-  def locations = storage.locations
-  def locationsRef = storage.locationsRef
+  val locations = storage.locations
 
   var currentScreen: Screen = null
   var assetManager: AssetManager = null

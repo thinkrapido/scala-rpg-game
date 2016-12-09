@@ -5,14 +5,13 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.{Game, Gdx}
 import com.jellobird.testgame.assets.AssetManager
 import com.jellobird.testgame.input.InputObserver
-import com.jellobird.testgame.storage.repositories.LocationsRepository.AbsolutePos
 import com.jellobird.testgame.maps.Map.MapEnum
-import com.jellobird.testgame.maps.RandomLocator
+import com.jellobird.testgame.maps.{Map, ProxyLocation}
 import com.jellobird.testgame.storage.Storage
 import com.jellobird.testgame.storage.Storage.ScreenType._
-import com.jellobird.testgame.screen.{CameraLocator, GameScreen}
-import com.jellobird.testgame.maps.Map
-import com.jellobird.testgame.player.{Player, PlayerLocator}
+import com.jellobird.testgame.screen.GameScreen
+import com.jellobird.testgame.player.{Player, PlayerLocation}
+import com.jellobird.testgame.storage.registry.LocationRegistry.Register
 
 import scala.concurrent.duration._
 
@@ -25,24 +24,6 @@ class ScalaBludBourne extends Game {
 
   private var assetManagerHelper: AssetManager = null
 
-  class RandomPosGenerator(val uuid: String, val actor: ActorRef, val map: Map) {
-
-    import Storage.actorSystem.dispatcher
-    Storage.actorSystem.scheduler.schedule(2.seconds, 1.seconds) {
-      tick
-    }
-
-    def tick = {
-      val v = new Vector2(
-        (map.width * Math.random()).asInstanceOf[Float],
-        (map.height * Math.random()).asInstanceOf[Float]
-      )
-      actor ! new AbsolutePos(v, uuid)
-    }
-
-  }
-
-  var randomPosGenerator: RandomPosGenerator = null
   override def create(): Unit = {
     Storage.assetManager = new AssetManager()
 
@@ -63,21 +44,14 @@ class ScalaBludBourne extends Game {
   }
 
   def setPlayerOnMap(x: GameScreen) = {
-    val playerLocator = new PlayerLocator(x.map.startPosition)
-    Storage.locations.add(playerLocator)
+    val playerLocator = Storage.actorSystem.actorOf(Props(new PlayerLocation(x.map.startPosition)))
+    Storage.locations ! Register(playerLocator)
 
     val playerRef = Storage.actorSystem.actorOf(Props(new Player(playerLocator)), "player")
-    val locator = new CameraLocator(playerLocator, x.map)
-    Storage.camera.setLocationEntity(locator)
-    Storage.locations.add(locator)
+    val locator = Storage.actorSystem.actorOf(Props(new ProxyLocation(playerLocator, x.map)))
+    Storage.camera.location = locator
+    Storage.locations ! Register(locator)
     ScalaBludBourne.inputObserver.addListener(playerRef)
-  }
-
-  def randomRelocation(x: GameScreen) = {
-    val locator = new RandomLocator(x.map)
-    randomPosGenerator = new RandomPosGenerator(locator.UUID, Storage.locationsRef, x.map)
-    Storage.camera.setLocationEntity(locator)
-    Storage.locations.add(locator)
   }
 
   override def dispose(): Unit = {
