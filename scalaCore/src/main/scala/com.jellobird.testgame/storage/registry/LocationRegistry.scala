@@ -41,6 +41,12 @@ class LocationRegistry extends Actor {
           actorRef ! x
         case _ =>
       }
+    case x @ Get(uuid, "location") =>
+      hash.get(uuid) match {
+        case Some(actorRef) =>
+          sender ! Set(_, "location", actorRef)
+        case _ =>
+      }
     case x @ Get(uuid, _) =>
       hash.get(uuid) match {
         case Some(actorRef) =>
