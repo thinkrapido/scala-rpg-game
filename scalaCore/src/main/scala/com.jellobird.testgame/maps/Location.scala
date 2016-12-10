@@ -40,18 +40,18 @@ class Location extends Actor {
   }
 
   override def receive: Receive = {
-    case Set(_, "next", vec: Vector2) => _next = vec
-    case Get(_, "curr") => sender ! Set(null, "next", _curr)
+    case SetLocation(_, "next", vec: Vector2) => _next = vec
+    case GetLocation(_, "curr") => sender ! SetLocation(null, "next", _curr)
     case Process(_, "update", elapsed: Float) => update(elapsed)
     case PoisonPill => destroy
   }
 
   def register = {
-    if (uuid == null) Storage.locations ! Register(self)
+    if (uuid == null) Storage.locations ! RegisterLocation(self)
   }
 
   def destroy = {
-    if (uuid != null) Storage.locations ! Destroy(uuid)
+    if (uuid != null) Storage.locations ! DestroyLocation(uuid)
   }
 }
 

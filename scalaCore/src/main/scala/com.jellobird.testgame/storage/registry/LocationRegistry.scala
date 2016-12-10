@@ -7,7 +7,6 @@ import com.jellobird.testgame.maps.Location
 import com.jellobird.testgame.storage.Storage
 
 import scala.collection.mutable
-import scala.reflect._
 
 /**
   * Created by jbc on 09.12.16.
@@ -19,35 +18,35 @@ class LocationRegistry extends Actor {
   val hash = new mutable.HashMap[UUID, ActorRef]()
 
   override def receive: Receive = {
-    case Create =>
+    case CreateLocation =>
       val uuid: UUID = UUID.randomUUID()
       val actorRef = Storage.actorSystem.actorOf(Props[Location])
       hash.put(uuid, actorRef)
-      sender ! Created(uuid)
-    case Register(actorRef) =>
+      sender ! LocationCreated(uuid)
+    case RegisterLocation(actorRef) =>
       val uuid: UUID = UUID.randomUUID()
       hash.put(uuid, actorRef)
-      sender ! Created(uuid)
-    case Destroy(uuid) =>
+      sender ! LocationCreated(uuid)
+    case DestroyLocation(uuid) =>
       hash.remove(uuid) match {
         case Some(actorRef) =>
           actorRef ! PoisonPill
-          sender ! Destroyed(uuid)
+          sender ! LocationDestroyed(uuid)
         case _ =>
       }
-    case x @ Set(uuid, _, _) =>
+    case x @ SetLocation(uuid, _, _) =>
       hash.get(uuid) match {
         case Some(actorRef) =>
           actorRef ! x
         case _ =>
       }
-    case x @ Get(uuid, "location") =>
+    case x @ GetLocation(uuid, "location") =>
       hash.get(uuid) match {
         case Some(actorRef) =>
-          sender ! Set(_, "location", actorRef)
+          sender ! SetLocation(null, "location", actorRef)
         case _ =>
       }
-    case x @ Get(uuid, _) =>
+    case x @ GetLocation(uuid, _) =>
       hash.get(uuid) match {
         case Some(actorRef) =>
           actorRef ! x
@@ -60,16 +59,16 @@ class LocationRegistry extends Actor {
 
 object LocationRegistry {
 
-  sealed abstract trait Crud
-  case object Create extends Crud
-  case class Register(actorRef: ActorRef) extends Crud
-  case class Destroy(uuid: UUID) extends Crud
-  case class Set(uuid: UUID, what: Any, payload: Any) extends Crud
-  case class Get(uuid: UUID, what: Any) extends Crud
+  sealed abstract trait LocationCrud
+  case object CreateLocation extends LocationCrud
+  case class RegisterLocation(actorRef: ActorRef) extends LocationCrud
+  case class DestroyLocation(uuid: UUID) extends LocationCrud
+  case class SetLocation(uuid: UUID, what: Any, payload: Any) extends LocationCrud
+  case class GetLocation(uuid: UUID, what: Any) extends LocationCrud
 
-  sealed abstract trait Lifetime
-  case class Created(uuid: UUID) extends Lifetime
-  case class Registered(uuid: UUID) extends Lifetime
-  case class Destroyed(uuid: UUID) extends Lifetime
-  case class Process(uuid: UUID, what: Any, payload: Any) extends Lifetime
+  sealed abstract trait LocationLifetime
+  case class LocationCreated(uuid: UUID) extends LocationLifetime
+  case class LocationRegistered(uuid: UUID) extends LocationLifetime
+  case class LocationDestroyed(uuid: UUID) extends LocationLifetime
+  case class Process(uuid: UUID, what: Any, payload: Any) extends LocationLifetime
 }
