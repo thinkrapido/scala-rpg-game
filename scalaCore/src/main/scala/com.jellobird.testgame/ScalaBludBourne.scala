@@ -10,8 +10,8 @@ import com.jellobird.testgame.storage.Storage
 import com.jellobird.testgame.storage.Storage.ScreenType._
 import com.jellobird.testgame.screen.GameScreen
 import com.jellobird.testgame.player.{Player, PlayerLocation}
-import com.jellobird.testgame.storage.registry.LocationRegistry.RegisterLocation
-import com.jellobird.testgame.storage.registry.LocationRegistry.SetLocation
+import com.jellobird.testgame.storage.registry.LocationsRegistry.SetLocation
+import com.jellobird.testgame.visuals.Visual.SpriteMap
 
 /**
   * Created by jbc on 26.11.16.
@@ -26,6 +26,7 @@ class ScalaBludBourne extends Game {
     Storage.assetManager = new AssetManager()
 
     MapEnum.values.foreach { e => Storage.assetManager.loadMapAsset(e.toString()) }
+    SpriteMap.values.foreach { e => Storage.assetManager.loadTextureAsset(e.toString()) }
 
     Storage.createScreens()
     Storage.screens.get(MainScreen) match {

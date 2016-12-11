@@ -5,7 +5,7 @@ import java.util.UUID
 import akka.actor.ActorRef
 import com.badlogic.gdx.math.Vector2
 import com.jellobird.testgame.storage.Storage
-import com.jellobird.testgame.storage.registry.LocationRegistry.{GetLocation, SetLocation}
+import com.jellobird.testgame.storage.registry.LocationsRegistry.{GetLocation, SetLocation}
 
 /**
   * Created by jbc on 03.12.16.

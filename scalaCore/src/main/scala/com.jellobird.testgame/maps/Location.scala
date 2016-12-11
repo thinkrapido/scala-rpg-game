@@ -5,7 +5,8 @@ import java.util.UUID
 import akka.actor.{Actor, PoisonPill}
 import com.badlogic.gdx.math.Vector2
 import com.jellobird.testgame.storage.Storage
-import com.jellobird.testgame.storage.registry.LocationRegistry._
+import com.jellobird.testgame.storage.registry.LocationsRegistry._
+import com.jellobird.testgame.visuals.VisualsRegistry.UpdateVisual
 
 /**
   * Created by jbc on 01.12.16.
@@ -16,6 +17,7 @@ class Location extends Actor {
   import Location.CollisionMethodEnum._
 
   var uuid: UUID = null
+  var visual_uuid: UUID = null
 
   var _curr: Vector2 = null
   var _next: Vector2 = null
@@ -27,7 +29,7 @@ class Location extends Actor {
   }
 
   protected def calcNextLocationAlgorithm(elapsed: Float) = {
-    if (_next != null) _curr = _next
+    if (_next != null) _curr = _next; Storage.visualsRegistry ! UpdateVisual(visual_uuid, "position", _curr)
   }
 
   def willCollideWith(that: Vector2, radius: Float)(implicit collisionMethod: CollisionMethodEnum.Value): Boolean = collisionMethod match {
@@ -41,6 +43,7 @@ class Location extends Actor {
 
   override def receive: Receive = {
     case SetLocation(_, "next", vec: Vector2) => _next = vec
+    case SetLocation(_, "visual", uuid: UUID) => visual_uuid = uuid
     case GetLocation(_, "curr") => sender ! SetLocation(null, "next", _curr)
     case Process(_, "update", elapsed: Float) => update(elapsed)
     case PoisonPill => destroy

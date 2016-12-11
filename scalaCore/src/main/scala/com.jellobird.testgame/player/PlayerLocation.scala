@@ -2,7 +2,7 @@ package com.jellobird.testgame.player
 
 import com.badlogic.gdx.math.Vector2
 import com.jellobird.testgame.maps.Location
-import com.jellobird.testgame.storage.registry.LocationRegistry.SetLocation
+import com.jellobird.testgame.storage.registry.LocationsRegistry.SetLocation
 
 /**
   * Created by jbc on 03.12.16.

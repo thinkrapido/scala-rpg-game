@@ -11,9 +11,9 @@ import scala.collection.mutable
 /**
   * Created by jbc on 09.12.16.
   */
-class LocationRegistry extends Actor {
+class LocationsRegistry extends Actor {
 
-  import LocationRegistry._
+  import LocationsRegistry._
 
   val hash = new mutable.HashMap[UUID, ActorRef]()
 
@@ -46,10 +46,10 @@ class LocationRegistry extends Actor {
           sender ! SetLocation(null, "location", actorRef)
         case _ =>
       }
-    case x @ GetLocation(uuid, _) =>
+    case x @ GetLocation(uuid, _) => // TODO: something is wrong with this
       hash.get(uuid) match {
         case Some(actorRef) =>
-          actorRef ! x
+          actorRef ! x // reason about this. must be sender forward x or something
         case _ =>
       }
     case x @ Process(_, _, _) =>
@@ -57,7 +57,7 @@ class LocationRegistry extends Actor {
   }
 }
 
-object LocationRegistry {
+object LocationsRegistry {
 
   sealed abstract trait LocationCrud
   case object CreateLocation extends LocationCrud
