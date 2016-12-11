@@ -29,13 +29,15 @@ class MainGameScreen extends GameScreen {
 
   var batch: SpriteBatch = null
 
+  private val tilesVisible = 20
+
   override def show(): Unit = {
     super.show()
 
     if( renderer == null ) {
-      renderer = new OrthogonalTiledMapRenderer(map.tiledMap, 1/map.tilePixelWidth);
+      renderer = new OrthogonalTiledMapRenderer(map.tiledMap);
     }
-    Storage.viewport = new FillViewport(map.tilePixelWidth,map.tilePixelHeight,Storage.camera)
+    Storage.viewport = new FillViewport(map.tilePixelWidth * tilesVisible,map.tilePixelHeight * tilesVisible,Storage.camera)
     Storage.viewport.apply()
     batch = new SpriteBatch()
   }
@@ -47,6 +49,7 @@ class MainGameScreen extends GameScreen {
     super.render(elapsed)
 
     Storage.camera.update()
+    batch.setProjectionMatrix(Storage.camera.combined)
     renderer.setView(Storage.camera)
 
     renderer.render()

@@ -85,7 +85,7 @@ class Visual(val animation: Animation) {
   def render(batch: SpriteBatch): Unit = {
     if (position != null) {
       val tr = animation.textureRegion(_state, counter)
-      val mapPosition = Storage.camera.project(new Vector3(position.cpy(),0))
+      val mapPosition = new Vector2(position).scl(GameScreen.current.map.tilePixelWidth)
       batch.draw(tr, mapPosition.x, mapPosition.y)
     }
   }
