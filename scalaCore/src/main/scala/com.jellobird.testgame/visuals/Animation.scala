@@ -1,9 +1,11 @@
 package com.jellobird.testgame.visuals
 
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.g2d
 import com.jellobird.testgame.storage.Storage
 import com.jellobird.testgame.visuals.Visual.SpriteMap
+
+import scala.collection.mutable
 
 /**
   * Created by jbc on 10.12.16.
@@ -14,19 +16,31 @@ class Animation(spritemap: SpriteMap.Value) {
   val tileWidth = texture.getWidth / 4
   val tileHeight = texture.getHeight / 4
 
-  val textureRegion: Array[Array[TextureRegion]] = TextureRegion.split(texture, tileWidth, tileHeight)
+  val textureRegion: Array[Array[g2d.TextureRegion]] = g2d.TextureRegion.split(texture, tileWidth, tileHeight)
 
-  val up = Set(Visual.State.N)
-  val down = Set(Visual.State.S)
-  val left = Set(Visual.State.W, Visual.State.NW, Visual.State.SW)
-  val right = Set(Visual.State.E, Visual.State.NE, Visual.State.SE)
+  val animations = mutable.HashMap[Visual.State.Value, g2d.Animation]()
+  val interval = 0.15f
+  animations.put(Visual.State.N, new g2d.Animation(interval, textureRegion(3): _*))
+  animations.put(Visual.State.S, new g2d.Animation(interval, textureRegion(0): _*))
+  animations.put(Visual.State.E, new g2d.Animation(interval, textureRegion(2): _*))
+  animations.put(Visual.State.NE, animations.get(Visual.State.E).get)
+  animations.put(Visual.State.SE, animations.get(Visual.State.E).get)
+  animations.put(Visual.State.W, new g2d.Animation(interval, textureRegion(1): _*))
+  animations.put(Visual.State.NW, animations.get(Visual.State.W).get)
+  animations.put(Visual.State.SW, animations.get(Visual.State.W).get)
+  animations.put(Visual.State.HOLD, new g2d.Animation(interval, textureRegion(0)(1)))
 
-  def textureRegion(state: Visual.State.Value, counter: Byte): TextureRegion = {
-    if (up contains state) textureRegion(3)(counter % textureRegion(3).size)
-    else if (down contains state) textureRegion(0)(counter % textureRegion(0).size)
-    else if (left contains state) textureRegion(1)(counter % textureRegion(1).size)
-    else if (right contains state) textureRegion(2)(counter % textureRegion(2).size)
-    else textureRegion(0)(0)
+  import Animation.stateTime
+  def textureRegion(state: Visual.State.Value): g2d.TextureRegion = {
+    stateTime += Gdx.graphics.getDeltaTime
+    println(stateTime, state)
+    animations.get(state).get.getKeyFrame(stateTime, true)
   }
+
+}
+
+object Animation {
+
+  var stateTime = 0f
 
 }
