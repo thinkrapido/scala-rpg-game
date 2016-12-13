@@ -4,7 +4,6 @@ import java.util.UUID
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.TimeUtils
 import com.jellobird.testgame.screen.GameScreen
 
 /**
@@ -18,38 +17,39 @@ class Visual(val animation: Animation) {
 
   var position: Vector2 = null
 
-  var _state = State.HOLD
+  var _direction = State.HOLD
 
-  def state = _state
-  def state_=(newState: State.Value): Unit = {
-    if (_state != newState) newState match {
-      case State.N => _state match {
-        case State.E => _state = State.NE
-        case State.W => _state = State.NW
-        case _ => _state = State.N
+  def direction = _direction
+  def direction_=(newDirection: State.Value): Unit = {
+    if (_direction != newDirection) newDirection match {
+      case State.N => _direction match {
+        case State.E => _direction = State.NE
+        case State.W => _direction = State.NW
+        case _ => _direction = State.N
       }
-      case State.S => _state match {
-        case State.E => _state = State.SE
-        case State.W => _state = State.SW
-        case _ => _state = State.S
+      case State.S => _direction match {
+        case State.E => _direction = State.SE
+        case State.W => _direction = State.SW
+        case _ => _direction = State.S
       }
-      case State.E =>_state match {
-        case State.N => _state = State.NE
-        case State.S => _state = State.SE
-        case _ => _state = State.E
+      case State.E =>_direction match {
+        case State.N => _direction = State.NE
+        case State.S => _direction = State.SE
+        case _ => _direction = State.E
       }
-      case State.W =>_state match {
-        case State.N => _state = State.NW
-        case State.S => _state = State.SW
-        case _ => _state = State.W
+      case State.W =>_direction match {
+        case State.N => _direction = State.NW
+        case State.S => _direction = State.SW
+        case _ => _direction = State.W
       }
-      case _ => _state = State.HOLD
+      case _ => _direction = State.HOLD
     }
   }
 
   def render(batch: SpriteBatch): Unit = {
     if (position != null) {
-      val tr = animation.textureRegion(_state)
+println(_direction)
+      val tr = animation.textureRegion(_direction)
       val mapPosition = new Vector2(position).scl(GameScreen.current.map.tilePixelWidth)
       batch.draw(tr, mapPosition.x, mapPosition.y)
     }

@@ -7,33 +7,20 @@ import com.badlogic.gdx.Input.Keys
 /**
   * Created by jbc on 02.12.16.
   */
-case class InputKeyState(val key: Int, startState: State.Value = State.LOW) {
+case class InputKeyState(val key: Int) {
 
-  import InputKeyState.State._
-
-  implicit def booleanToState(b: Boolean): State.Value = b match {
-    case true => HIGH
-    case false => LOW
-  }
-  implicit def stateToBoolean(s: State.Value): Boolean = s match {
-    case HIGH => true
-    case LOW => false
-  }
-
-  private var _state = startState
   private var _count = 0
 
   def count = _count
 
-  def ++ = if ( Gdx.input.isKeyPressed(key) ) _count = _count + 1
+  def ++ = if ( Gdx.input.isKeyPressed(key) ) _count += 1
 
   def ! = {
-    _state = Gdx.input.isKeyPressed(key)
     _count = 0
   }
 
   def copy: InputKeyState = {
-    val out = new InputKeyState(key, _state)
+    val out = new InputKeyState(key)
     out._count = _count
     out
   }
@@ -71,11 +58,13 @@ object InputKeyState {
     Keys.DEL,
     Keys.BACKSPACE,
     Keys.FORWARD_DEL,
+/*
     Keys.DPAD_CENTER,
     Keys.DPAD_DOWN,
     Keys.DPAD_LEFT,
     Keys.DPAD_RIGHT,
     Keys.DPAD_UP,
+*/
     Keys.CENTER,
     Keys.DOWN,
     Keys.LEFT,
@@ -143,6 +132,7 @@ object InputKeyState {
     Keys.X,
     Keys.Y,
     Keys.Z,
+/*
     Keys.META_ALT_LEFT_ON,
     Keys.META_ALT_ON,
     Keys.META_ALT_RIGHT_ON,
@@ -150,6 +140,7 @@ object InputKeyState {
     Keys.META_SHIFT_ON,
     Keys.META_SHIFT_RIGHT_ON,
     Keys.META_SYM_ON,
+*/
     Keys.CONTROL_LEFT,
     Keys.CONTROL_RIGHT,
     Keys.ESCAPE,
@@ -204,8 +195,6 @@ object InputKeyState {
     keys.map(new InputKeyState(_))
   }
 
+  def reset: Unit = keyStates.foreach(_.!)
 
-  object State extends Enumeration {
-    val LOW, HIGH = Value
-  }
 }

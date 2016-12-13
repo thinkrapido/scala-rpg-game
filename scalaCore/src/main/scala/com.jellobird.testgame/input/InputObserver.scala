@@ -21,22 +21,19 @@ class InputObserver extends InputProcessor {
   def notifyActors: Unit = {
     val recentEvents = InputKeyState.keyStates.filter(_.count > 0).map(_.copy)
     if(recentEvents.size > 0) {
-      InputKeyState.keyStates.foreach(_.!)
+      val keys = InputKeyState.keyStates.filter(_.key == 21)
+      InputKeyState.reset
       actors.foreach{ _ ! new KeyEvents(recentEvents) }
     }
   }
 
   implicit val ec = ExecutionContext.global
   Storage.actorSystem.scheduler.schedule(1.seconds, 3.milliseconds) {
-    collectInputs
+    InputKeyState.keyStates.foreach(_.++)
   }
   Storage.actorSystem.scheduler.schedule(1.seconds, 16.milliseconds) {
     notifyActors
   }
-
-  def collectInputs: Unit = InputKeyState.keyStates.foreach(_.++)
-
-  def reset: Unit = InputKeyState.keyStates.foreach(_.!)
 
   def clear: Unit = actors = HashSet[ActorRef]()
 
@@ -44,11 +41,11 @@ class InputObserver extends InputProcessor {
 
   override def mouseMoved(screenX: Int, screenY: Int): Boolean = false
 
-  override def keyDown(keycode: Int): Boolean = { notifyActors ; reset ; true }
+  override def keyDown(keycode: Int): Boolean = { true }
 
   override def touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean = false
 
-  override def keyUp(keycode: Int): Boolean =  { notifyActors ; reset ; true }
+  override def keyUp(keycode: Int): Boolean =  { true }
 
   override def scrolled(amount: Int): Boolean = false
 

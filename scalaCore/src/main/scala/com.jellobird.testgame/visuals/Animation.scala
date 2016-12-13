@@ -28,12 +28,11 @@ class Animation(spritemap: SpriteMap.Value) {
   animations.put(Visual.State.W, new g2d.Animation(interval, textureRegion(1): _*))
   animations.put(Visual.State.NW, animations.get(Visual.State.W).get)
   animations.put(Visual.State.SW, animations.get(Visual.State.W).get)
-  animations.put(Visual.State.HOLD, new g2d.Animation(interval, textureRegion(0)(1)))
+  animations.put(Visual.State.HOLD, new g2d.Animation(interval, textureRegion(0)(0)))
 
   import Animation.stateTime
   def textureRegion(state: Visual.State.Value): g2d.TextureRegion = {
     stateTime += Gdx.graphics.getDeltaTime
-    println(stateTime, state)
     animations.get(state).get.getKeyFrame(stateTime, true)
   }
 

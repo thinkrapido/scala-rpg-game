@@ -46,7 +46,7 @@ class VisualsRegistry extends Actor {
       }
     case UpdateVisual(uuid, "state", newState: Visual.State.Value) =>
       hash.get(uuid) match {
-        case Some(visual) => visual state = newState
+        case Some(visual) => visual direction = newState
         case _ =>
       }
     case GetVisual(uuid, _) =>
