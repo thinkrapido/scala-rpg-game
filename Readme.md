@@ -12,4 +12,14 @@ As you explore the contents you might have questions about my design decisions. 
 
 Yours,
 
-thinkrapido
+Romeo
+
+
+# Next Milestones
+
+- collision detection and pathfinding
+
+# Accomplished Milestones
+
+- Player Movement
+- Displaying Player on Map
