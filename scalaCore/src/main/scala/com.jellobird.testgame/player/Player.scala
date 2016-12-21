@@ -3,10 +3,8 @@ package com.jellobird.testgame.player
 import java.util.UUID
 
 import akka.actor.{Actor, ActorRef}
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.TimeUtils
 import com.jellobird.testgame.input.InputEvents.KeyEvents
 import com.jellobird.testgame.input.InputKeyState
 import com.jellobird.testgame.storage.Storage
@@ -52,7 +50,6 @@ class Player(val locator: ActorRef) extends Actor {
           delayHoldVisual.renew
         case _ =>
       }
-
     }
     case VisualCreated(uuid) =>
       visual_uuid = uuid

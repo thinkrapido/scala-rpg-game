@@ -5,6 +5,6 @@ package com.jellobird.testgame.input
   */
 object InputEvents {
 
-  case class KeyEvents(keyStates: Array[InputKeyState])
+  case class KeyEvents(keyStates: Set[InputKeyState])
 
 }

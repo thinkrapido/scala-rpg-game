@@ -21,7 +21,6 @@ class InputObserver extends InputProcessor {
   def notifyActors: Unit = {
     val recentEvents = InputKeyState.keyStates.filter(_.count > 0).map(_.copy)
     if(recentEvents.size > 0) {
-      val keys = InputKeyState.keyStates.filter(_.key == 21)
       InputKeyState.reset
       actors.foreach{ _ ! new KeyEvents(recentEvents) }
     }

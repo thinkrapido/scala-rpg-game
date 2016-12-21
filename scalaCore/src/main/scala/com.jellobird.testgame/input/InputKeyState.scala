@@ -29,7 +29,7 @@ case class InputKeyState(val key: Int) {
 
 object InputKeyState {
 
-  private val keys = Array(
+  private val keys = Set(
     Keys.ANY_KEY,
     Keys.NUM_0,
     Keys.NUM_1,
@@ -191,7 +191,7 @@ object InputKeyState {
     Keys.F12
   )
 
-  val keyStates: Array[InputKeyState] = {
+  val keyStates: Set[InputKeyState] = {
     keys.map(new InputKeyState(_))
   }
 
