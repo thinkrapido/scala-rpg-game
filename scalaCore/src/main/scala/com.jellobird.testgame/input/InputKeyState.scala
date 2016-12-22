@@ -1,7 +1,6 @@
 package com.jellobird.testgame.input
 
 import com.badlogic.gdx.Gdx
-import InputKeyState._
 import com.badlogic.gdx.Input.Keys
 
 /**
@@ -19,6 +18,14 @@ case class InputKeyState(val key: Int) {
     _count = 0
   }
 
+  override def hashCode() = key.##
+
+  override def equals (that: Any): Boolean = that match {
+    case k @ Int => key == k
+    case InputKeyState(k) => key == k
+    case _ => false
+  }
+
   def copy: InputKeyState = {
     val out = new InputKeyState(key)
     out._count = _count
@@ -28,6 +35,8 @@ case class InputKeyState(val key: Int) {
 }
 
 object InputKeyState {
+
+  implicit def keyToInputKeyState (k: Int) = new InputKeyState(k)
 
   private val keys = Set(
     Keys.ANY_KEY,

@@ -7,6 +7,7 @@ import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.math.Vector2
 import com.jellobird.testgame.input.InputEvents.KeyEvents
 import com.jellobird.testgame.input.InputKeyState
+import com.jellobird.testgame.input.InputKeyState._
 import com.jellobird.testgame.storage.Storage
 import com.jellobird.testgame.storage.registry.LocationsRegistry.SetLocation
 import com.jellobird.testgame.utils.DelayFunction
@@ -23,6 +24,8 @@ class Player(val locator: ActorRef) extends Actor {
 
   private var visual_uuid: UUID = null
 
+  private var speedFactor = 3f
+
   Storage.visualsRegistry ! CreateVisual(SpriteMap.Warrior)
 
   val delayHoldVisual = new DelayFunction(() => {
@@ -30,27 +33,35 @@ class Player(val locator: ActorRef) extends Actor {
   }, 150.milliseconds)
 
   override def receive: Receive = {
-    case KeyEvents(keyStates) => keyStates.foreach { keyState =>
-      keyState match {
-        case InputKeyState(Keys.UP) =>
-          locator ! SetLocation(null, "deltaNext", new Vector2(0, 1))
-          Storage.visualsRegistry ! UpdateVisual(visual_uuid, "state", Visual.State.N)
-          delayHoldVisual.renew
-        case InputKeyState(Keys.DOWN) =>
-          locator ! SetLocation(null, "deltaNext", new Vector2(0, -1))
-          Storage.visualsRegistry ! UpdateVisual(visual_uuid, "state", Visual.State.S)
-          delayHoldVisual.renew
-        case InputKeyState(Keys.RIGHT) =>
-          locator ! SetLocation(null, "deltaNext", new Vector2(1, 0))
-          Storage.visualsRegistry ! UpdateVisual(visual_uuid, "state", Visual.State.E)
-          delayHoldVisual.renew
-        case InputKeyState(Keys.LEFT) =>
-          locator ! SetLocation(null, "deltaNext", new Vector2(-1, 0))
-          Storage.visualsRegistry ! UpdateVisual(visual_uuid, "state", Visual.State.W)
-          delayHoldVisual.renew
-        case _ =>
+    case KeyEvents(ks) =>
+
+      val direction =
+        if (Set[InputKeyState](Keys.UP, Keys.LEFT) forall (ks contains)) Some(Visual.State.NW)
+        else if (Set[InputKeyState](Keys.UP, Keys.RIGHT) forall (ks contains)) Some(Visual.State.NE)
+        else if (Set[InputKeyState](Keys.DOWN, Keys.LEFT) forall (ks contains)) Some(Visual.State.SW)
+        else if (Set[InputKeyState](Keys.DOWN, Keys.RIGHT) forall (ks contains)) Some(Visual.State.SE)
+        else if (ks contains Keys.UP) Some(Visual.State.N)
+        else if (ks contains Keys.DOWN) Some(Visual.State.S)
+        else if (ks contains Keys.LEFT) Some(Visual.State.W)
+        else if (ks contains Keys.RIGHT) Some(Visual.State.E)
+        else None
+
+      if (direction != None) {
+        locator ! SetLocation(null, "deltaNext", direction match {
+          case Some(Visual.State.N)  => new Vector2( 0              ,  1 * speedFactor)
+          case Some(Visual.State.S)  => new Vector2( 0              , -1 * speedFactor)
+          case Some(Visual.State.W)  => new Vector2(-1 * speedFactor,  0)
+          case Some(Visual.State.E)  => new Vector2( 1 * speedFactor,  0)
+          case Some(Visual.State.NW) => new Vector2(-1 * speedFactor,  1 * speedFactor)
+          case Some(Visual.State.NE) => new Vector2( 1 * speedFactor,  1 * speedFactor)
+          case Some(Visual.State.SW) => new Vector2(-1 * speedFactor, -1 * speedFactor)
+          case Some(Visual.State.SE) => new Vector2( 1 * speedFactor, -1 * speedFactor)
+          case _ =>
+        })
+        Storage.visualsRegistry ! UpdateVisual(visual_uuid, "state", direction.getOrElse(Visual.State.HOLD))
+        delayHoldVisual.renew
       }
-    }
+
     case VisualCreated(uuid) =>
       visual_uuid = uuid
       locator ! SetLocation(null, "visual", uuid)

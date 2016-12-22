@@ -30,7 +30,7 @@ class InputObserver extends InputProcessor {
   Storage.actorSystem.scheduler.schedule(1.seconds, 3.milliseconds) {
     InputKeyState.keyStates.foreach(_.++)
   }
-  Storage.actorSystem.scheduler.schedule(1.seconds, 16.milliseconds) {
+  Storage.actorSystem.scheduler.schedule(1.seconds, 100.milliseconds) {
     notifyActors
   }
 
