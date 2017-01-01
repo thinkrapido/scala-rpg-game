@@ -2,10 +2,11 @@ package com.jellobird.testgame.visuals
 
 import java.util.UUID
 
-import akka.actor.Actor
+import akka.actor.{Actor, Props}
 import akka.util.Timeout
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
+import com.jellobird.testgame.maps.MapPosition
 import com.jellobird.testgame.visuals.Visual.SpriteMap
 
 import scala.collection.mutable
@@ -39,7 +40,7 @@ class VisualsRegistry extends Actor {
           sender ! VisualDestroyed(uuid)
         case _ =>
       }
-    case UpdateVisual(uuid, "position", position: Vector2) =>
+    case UpdateVisual(uuid, "position", position: MapPosition) =>
       hash.get(uuid) match {
         case Some(visual) => visual.position = position
         case _ =>
@@ -62,6 +63,8 @@ class VisualsRegistry extends Actor {
 }
 
 object VisualsRegistry {
+
+  def props = Props[VisualsRegistry]
 
   sealed abstract trait VisualCrud
   case class CreateVisual(payload: SpriteMap.Value) extends VisualCrud

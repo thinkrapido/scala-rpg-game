@@ -1,31 +1,23 @@
 package com.jellobird.testgame.storage
 
-import akka.actor.{ActorSystem, Props}
+import akka.actor.ActorSystem
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.utils.viewport.{ScalingViewport, Viewport}
 import com.jellobird.testgame.assets.AssetManager
+import com.jellobird.testgame.maps.LocationsRegistry
 import com.jellobird.testgame.screen.{Camera, MainGameScreen}
-import com.jellobird.testgame.storage.registry.LocationsRegistry
+import com.jellobird.testgame.time.TickerRegistry
 import com.jellobird.testgame.visuals.VisualsRegistry
-
-/**
-  * Created by jbc on 01.12.16.
-  */
-private[this] class Storage {
-
-  var locations = Storage.actorSystem.actorOf(Props[LocationsRegistry])
-
-}
 
 object Storage {
 
   val actorSystem = ActorSystem("testgame")
 
-  private[this] val storage = new Storage
+  val locationsRegistry = actorSystem.actorOf(LocationsRegistry.props)
 
-  val locations = storage.locations
+  val visualsRegistry = actorSystem.actorOf(VisualsRegistry.props)
 
-  val visualsRegistry = actorSystem.actorOf(Props[VisualsRegistry])
+  val tickerRegistry = actorSystem.actorOf(TickerRegistry.props)
 
   var currentScreen: Screen = null
   var assetManager: AssetManager = null

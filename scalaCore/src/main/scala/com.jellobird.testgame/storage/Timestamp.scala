@@ -1,7 +1,5 @@
 package com.jellobird.testgame.storage
 
-import java.util.concurrent.TimeUnit
-
 import com.badlogic.gdx.utils.TimeUtils
 
 /**

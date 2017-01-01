@@ -9,7 +9,7 @@ import com.jellobird.testgame.input.InputEvents.KeyEvents
 import com.jellobird.testgame.input.InputKeyState
 import com.jellobird.testgame.input.InputKeyState._
 import com.jellobird.testgame.storage.Storage
-import com.jellobird.testgame.storage.registry.LocationsRegistry.SetLocation
+import com.jellobird.testgame.maps.LocationsRegistry.SetDestination
 import com.jellobird.testgame.utils.DelayFunction
 import com.jellobird.testgame.visuals.Visual
 import com.jellobird.testgame.visuals.Visual.SpriteMap
@@ -47,7 +47,7 @@ class Player(val locator: ActorRef) extends Actor {
         else None
 
       if (direction != None) {
-        locator ! SetLocation(null, "deltaNext", direction match {
+        locator ! SetDestination(null, "oneStepFurther", direction match {
           case Some(Visual.State.N)  => new Vector2( 0              ,  1 * speedFactor)
           case Some(Visual.State.S)  => new Vector2( 0              , -1 * speedFactor)
           case Some(Visual.State.W)  => new Vector2(-1 * speedFactor,  0)
@@ -64,6 +64,6 @@ class Player(val locator: ActorRef) extends Actor {
 
     case VisualCreated(uuid) =>
       visual_uuid = uuid
-      locator ! SetLocation(null, "visual", uuid)
+      locator ! SetDestination(null, "visual", uuid)
   }
 }

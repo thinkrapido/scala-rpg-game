@@ -4,6 +4,7 @@ import java.util.UUID
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
+import com.jellobird.testgame.maps.MapPosition
 import com.jellobird.testgame.screen.GameScreen
 
 /**
@@ -15,14 +16,14 @@ class Visual(val animation: Animation) {
 
   val uuid: UUID = UUID.randomUUID()
 
-  var position: Vector2 = null
+  var position: MapPosition = null
 
   var direction = State.HOLD
 
   def render(batch: SpriteBatch): Unit = {
     if (position != null) {
       val tr = animation.textureRegion(direction)
-      val mapPosition = new Vector2(position).scl(GameScreen.current.map.tilePixelWidth)
+      val mapPosition = new Vector2(position.curr).scl(GameScreen.current.map.tilePixelWidth)
       batch.draw(tr, mapPosition.x, mapPosition.y)
     }
   }

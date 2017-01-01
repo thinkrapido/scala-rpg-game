@@ -1,19 +1,21 @@
 package com.jellobird.testgame.input
 
 import akka.actor.ActorRef
-import com.badlogic.gdx.InputProcessor
 import com.jellobird.testgame.input.InputEvents.KeyEvents
 import com.jellobird.testgame.storage.Storage
+import com.jellobird.testgame.time.Ticker
 
 import scala.collection.immutable.HashSet
 import scala.concurrent.ExecutionContext
+import scala.concurrent.duration._
+
 
 /**
   * Created by jbc on 02.12.16.
   */
-class InputObserver extends InputProcessor {
+class InputObserver {
 
-  import scala.concurrent.duration._
+  import InputObserver._
 
   private var actors = HashSet[ActorRef]()
   def addListener(actor: ActorRef) = actors = actors + actor
@@ -27,29 +29,21 @@ class InputObserver extends InputProcessor {
   }
 
   implicit val ec = ExecutionContext.global
-  Storage.actorSystem.scheduler.schedule(1.seconds, 3.milliseconds) {
+  Storage.actorSystem.scheduler.schedule(1.seconds, POLL_INTERVALL.duration) {
     InputKeyState.keyStates.foreach(_.++)
   }
-  Storage.actorSystem.scheduler.schedule(1.seconds, 100.milliseconds) {
+  Storage.actorSystem.scheduler.schedule(1.seconds, NOTIFY_INTERVALL.duration) {
     notifyActors
+    NOTIFY_INTERVALL.tick
   }
 
   def clear: Unit = actors = HashSet[ActorRef]()
 
-  override def keyTyped(character: Char): Boolean = false
+}
 
-  override def mouseMoved(screenX: Int, screenY: Int): Boolean = false
+object InputObserver {
 
-  override def keyDown(keycode: Int): Boolean = { true }
-
-  override def touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean = false
-
-  override def keyUp(keycode: Int): Boolean =  { true }
-
-  override def scrolled(amount: Int): Boolean = false
-
-  override def touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean = false
-
-  override def touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean = false
+  val POLL_INTERVALL = new Ticker("input:keys:poll", 3.milliseconds)
+  val NOTIFY_INTERVALL = new Ticker("input:keys:notify", 100.milliseconds)
 
 }
