@@ -20,10 +20,12 @@ class Visual(val animation: Animation) {
 
   var direction = State.HOLD
 
+  val mapPosition = new Vector2()
+
   def render(batch: SpriteBatch): Unit = {
     if (position != null) {
       val tr = animation.textureRegion(direction)
-      val mapPosition = new Vector2(position.curr).scl(GameScreen.current.map.tilePixelWidth)
+      mapPosition.set(position.curr).scl(GameScreen.current.map.tilePixelWidth)
       batch.draw(tr, mapPosition.x, mapPosition.y)
     }
   }

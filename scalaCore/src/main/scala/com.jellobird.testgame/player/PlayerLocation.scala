@@ -9,11 +9,14 @@ import com.jellobird.testgame.maps.LocationsRegistry.SetDestination
   */
 class PlayerLocation(val startPosition: Vector2) extends Location {
 
+  override def penalty: Float = 1f
+
   override def receive: Receive = super.receive orElse {
     case SetDestination(_, "oneStepFurther", payload: Vector2) => oneStepFurther(payload)
   }
 
   def oneStepFurther(direction: Vector2): Unit = {
+    val dest = nextDestination
     setDestination(direction.nor().scl(currStep).add(curr))
   }
 

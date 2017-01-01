@@ -18,13 +18,11 @@ import com.jellobird.testgame.visuals.VisualsRegistry.{CreateVisual, UpdateVisua
 /**
   * Created by jbc on 04.12.16.
   */
-class Player(val locator: ActorRef) extends Actor {
+class Player(val location: ActorRef) extends Actor {
 
   import scala.concurrent.duration._
 
   private var visual_uuid: UUID = null
-
-  private var speedFactor = 3f
 
   Storage.visualsRegistry ! CreateVisual(SpriteMap.Warrior)
 
@@ -47,15 +45,15 @@ class Player(val locator: ActorRef) extends Actor {
         else None
 
       if (direction != None) {
-        locator ! SetDestination(null, "oneStepFurther", direction match {
-          case Some(Visual.State.N)  => new Vector2( 0              ,  1 * speedFactor)
-          case Some(Visual.State.S)  => new Vector2( 0              , -1 * speedFactor)
-          case Some(Visual.State.W)  => new Vector2(-1 * speedFactor,  0)
-          case Some(Visual.State.E)  => new Vector2( 1 * speedFactor,  0)
-          case Some(Visual.State.NW) => new Vector2(-1 * speedFactor,  1 * speedFactor)
-          case Some(Visual.State.NE) => new Vector2( 1 * speedFactor,  1 * speedFactor)
-          case Some(Visual.State.SW) => new Vector2(-1 * speedFactor, -1 * speedFactor)
-          case Some(Visual.State.SE) => new Vector2( 1 * speedFactor, -1 * speedFactor)
+        location ! SetDestination(null, "oneStepFurther", direction match {
+          case Some(Visual.State.N)  => new Vector2( 0,  1)
+          case Some(Visual.State.S)  => new Vector2( 0, -1)
+          case Some(Visual.State.W)  => new Vector2(-1,  0)
+          case Some(Visual.State.E)  => new Vector2( 1,  0)
+          case Some(Visual.State.NW) => new Vector2(-1,  1)
+          case Some(Visual.State.NE) => new Vector2( 1,  1)
+          case Some(Visual.State.SW) => new Vector2(-1, -1)
+          case Some(Visual.State.SE) => new Vector2( 1, -1)
           case _ =>
         })
         Storage.visualsRegistry ! UpdateVisual(visual_uuid, "state", direction.getOrElse(Visual.State.HOLD))
@@ -64,6 +62,6 @@ class Player(val locator: ActorRef) extends Actor {
 
     case VisualCreated(uuid) =>
       visual_uuid = uuid
-      locator ! SetDestination(null, "visual", uuid)
+      location ! SetDestination(null, "visual", uuid)
   }
 }

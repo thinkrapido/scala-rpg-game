@@ -6,7 +6,6 @@ import com.jellobird.testgame.storage.Storage
 import com.jellobird.testgame.time.Ticker
 
 import scala.collection.immutable.HashSet
-import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 
 
@@ -28,14 +27,8 @@ class InputObserver {
     }
   }
 
-  implicit val ec = ExecutionContext.global
-  Storage.actorSystem.scheduler.schedule(1.seconds, POLL_INTERVALL.duration) {
-    InputKeyState.keyStates.foreach(_.++)
-  }
-  Storage.actorSystem.scheduler.schedule(1.seconds, NOTIFY_INTERVALL.duration) {
-    notifyActors
-    NOTIFY_INTERVALL.tick
-  }
+  POLL_INTERVALL.start { InputKeyState.keyStates.foreach(_.++) }
+  NOTIFY_INTERVALL.start { notifyActors }
 
   def clear: Unit = actors = HashSet[ActorRef]()
 

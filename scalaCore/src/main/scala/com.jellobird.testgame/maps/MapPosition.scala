@@ -28,6 +28,7 @@ trait MapPosition {
     case Nil => _last
     case head :: _ => head
   }
+  var lastScaleFactor = 0f
   def curr: Vector2 = {
     val dest = nextDestination
     if (_last.len() == 0) _last.set(dest)
@@ -37,9 +38,12 @@ trait MapPosition {
       if (_helper.len() > currStep) {
         _helper.nor().scl(currStep)
       }
-      _next.set(_helper/*.scl(scaleFactor.factor)*/.add(_last))
+      val factor = scaleFactor.factor
+      if (factor > lastScaleFactor) {
+        lastScaleFactor = factor
+      }
+      _next.set(_helper.scl(lastScaleFactor).add(_last))
     }
-    _last.set(_next)
   }
 
   def setDestination(vector: Vector2): Unit = {
@@ -51,6 +55,7 @@ trait MapPosition {
 
   def tick: Unit = {
     _last.set(_next)
+    lastScaleFactor = 0f
   }
 
 }

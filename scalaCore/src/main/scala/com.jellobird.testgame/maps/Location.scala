@@ -8,6 +8,7 @@ import com.jellobird.testgame.storage.Storage
 import LocationsRegistry._
 import com.jellobird.testgame.input.InputObserver
 import com.jellobird.testgame.time.Tick
+import com.jellobird.testgame.time.TickerRegistry.{RegisterTickerObserver, UnRegisterTickerObserver}
 import com.jellobird.testgame.utils.ScaleFactor
 import com.jellobird.testgame.visuals.VisualsRegistry.UpdateVisual
 
@@ -32,14 +33,20 @@ class Location extends Actor with MapPosition with Tick {
   }
 
   def register = {
-    if (uuid == null) Storage.locationsRegistry ! RegisterLocation(self)
+    if (uuid == null) {
+      Storage.locationsRegistry ! RegisterLocation(self)
+      Storage.tickerRegistry ! RegisterTickerObserver("input:keys:notify", this)
+    }
   }
 
   def destroy = {
-    if (uuid != null) Storage.locationsRegistry ! DestroyLocation(uuid)
+    if (uuid != null) {
+      Storage.locationsRegistry ! DestroyLocation(uuid)
+      Storage.tickerRegistry ! UnRegisterTickerObserver("input:keys:notify", this)
+    }
   }
 
-  override val step: Float = 1f
+  override val step: Float = .5f
   override val scaleFactor: ScaleFactor = InputObserver.NOTIFY_INTERVALL
 
   override def penalty: Float = 1f
