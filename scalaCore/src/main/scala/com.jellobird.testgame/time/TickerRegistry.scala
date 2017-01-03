@@ -27,9 +27,6 @@ class TickerRegistry extends Actor {
       map.get(name) match {
         case Some(set) => set.remove(observer)
         case _ =>
-          val set = mutable.Set[Tick]()
-          map.put(name, set)
-          set.remove(observer)
       }
     case _ =>
   }
