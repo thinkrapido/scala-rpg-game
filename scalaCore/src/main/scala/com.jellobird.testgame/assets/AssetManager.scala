@@ -60,13 +60,13 @@ class AssetManager extends com.badlogic.gdx.assets.AssetManager {
     }
   }
 
-  def getTextureAsset(file: String): Texture = {
+  def getTextureAsset(file: String): Option[Texture] = {
     if (isLoaded(file)) {
-      get(file).asInstanceOf[Texture]
+      Some(get(file).asInstanceOf[Texture])
     }
     else {
       Gdx.app.debug(TAG, "%s is not loaded!: %s".format(classOf[Texture], file))
-      null
+      Some(null)
     }
   }
 }

@@ -2,7 +2,7 @@ package com.jellobird.testgame.storage
 
 import akka.actor.ActorSystem
 import com.badlogic.gdx.Screen
-import com.badlogic.gdx.utils.viewport.{ScalingViewport, Viewport}
+import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.jellobird.testgame.assets.AssetManager
 import com.jellobird.testgame.maps.LocationsRegistry
 import com.jellobird.testgame.screen.{Camera, MainGameScreen}
