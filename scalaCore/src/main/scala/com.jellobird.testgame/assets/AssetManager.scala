@@ -66,7 +66,7 @@ class AssetManager extends com.badlogic.gdx.assets.AssetManager {
     }
     else {
       Gdx.app.debug(TAG, "%s is not loaded!: %s".format(classOf[Texture], file))
-      Some(null)
+      None
     }
   }
 }

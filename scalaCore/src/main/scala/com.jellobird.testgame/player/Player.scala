@@ -6,7 +6,7 @@ import akka.actor.{Actor, ActorRef}
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.math.Vector2
 import com.jellobird.testgame.input.InputEvents.KeyEvents
-import com.jellobird.testgame.input.InputKeyState
+import com.jellobird.testgame.input.{InputEvents, InputKeyState}
 import com.jellobird.testgame.input.InputKeyState._
 import com.jellobird.testgame.storage.Storage
 import com.jellobird.testgame.maps.LocationsRegistry.SetDestination
@@ -31,32 +31,11 @@ class Player(val location: ActorRef) extends Actor {
   }, 150.milliseconds)
 
   override def receive: Receive = {
-    case KeyEvents(ks) =>
+    case k @ KeyEvents(ks) =>
 
-      val direction =
-        if (Set[InputKeyState](Keys.UP, Keys.LEFT) forall (ks contains)) Some(Visual.State.NW)
-        else if (Set[InputKeyState](Keys.UP, Keys.RIGHT) forall (ks contains)) Some(Visual.State.NE)
-        else if (Set[InputKeyState](Keys.DOWN, Keys.LEFT) forall (ks contains)) Some(Visual.State.SW)
-        else if (Set[InputKeyState](Keys.DOWN, Keys.RIGHT) forall (ks contains)) Some(Visual.State.SE)
-        else if (ks contains Keys.UP) Some(Visual.State.N)
-        else if (ks contains Keys.DOWN) Some(Visual.State.S)
-        else if (ks contains Keys.LEFT) Some(Visual.State.W)
-        else if (ks contains Keys.RIGHT) Some(Visual.State.E)
-        else None
-
-      if (direction != None) {
-        location ! SetDestination(null, "oneStepFurther", direction match {
-          case Some(Visual.State.N)  => new Vector2( 0,  1)
-          case Some(Visual.State.S)  => new Vector2( 0, -1)
-          case Some(Visual.State.W)  => new Vector2(-1,  0)
-          case Some(Visual.State.E)  => new Vector2( 1,  0)
-          case Some(Visual.State.NW) => new Vector2(-1,  1)
-          case Some(Visual.State.NE) => new Vector2( 1,  1)
-          case Some(Visual.State.SW) => new Vector2(-1, -1)
-          case Some(Visual.State.SE) => new Vector2( 1, -1)
-          case _ =>
-        })
-        Storage.visualsRegistry ! UpdateVisual(visual_uuid, "state", direction.getOrElse(Visual.State.HOLD))
+      if (k.direction != Visual.State.HOLD) {
+        location ! SetDestination(null, "oneStepFurther", InputEvents.vector(k.direction))
+        Storage.visualsRegistry ! UpdateVisual(visual_uuid, "state", k.direction)
         delayHoldVisual.renew
       }
 
