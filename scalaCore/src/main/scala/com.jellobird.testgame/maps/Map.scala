@@ -5,6 +5,7 @@ import Map._
 import com.badlogic.gdx.maps.{MapLayer, MapObject, MapProperties}
 import com.badlogic.gdx.math.Vector2
 import com.jellobird.testgame.storage.Storage
+import scala.collection.JavaConverters._
 /**
   * Created by jbc on 27.11.16.
   */
@@ -19,6 +20,21 @@ abstract class Map(val currentMap: MapEnum.Value) {
   val tilePixelHeight: Float = _properties.getTileHeight
   val pixelWidth: Float = width * tilePixelWidth
   val pixelHeight: Float = height * tilePixelHeight
+  val collisionBoxes: List[BoundingBox] = tiledMap
+      .getLayers
+      .get(Layer.COLLISION_LAYER.toString)
+      .getObjects.asScala
+      .map(_.getProperties)
+      .map(p => BoundingBox(
+        p.get("x").asInstanceOf[Float],
+        p.get("y").asInstanceOf[Float],
+        p.get("width").asInstanceOf[Float],
+        p.get("height").asInstanceOf[Float]
+      ))
+      .map(_.scale(1.0f / tilePixelWidth, 1.0f / tilePixelHeight))
+      .toList
+
+  def testCollision(box: BoundingBox): Boolean = collisionBoxes.map(box.test(_)).foldLeft(false)((a, b) => a || b)
 
   def getCoordinatesFromMapObject(obj: MapObject): Vector2 = {
     val props = obj.getProperties

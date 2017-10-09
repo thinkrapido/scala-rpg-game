@@ -22,7 +22,7 @@ class ProxyLocation(private var proxy: ActorRef, private val _map: Map) extends 
     case SetDestination(_, "location", actorRef: ActorRef) => proxy = actorRef
   }
 
-  override def curr: Vector2 = {
+  override def curr: BoundingBox = {
     implicit val ec = ExecutionContext.Implicits.global
     implicit val timeout = Timeout(300.milliseconds)
 
@@ -31,6 +31,6 @@ class ProxyLocation(private var proxy: ActorRef, private val _map: Map) extends 
       .map(curr => curr.payload.asInstanceOf[Vector2])
     val out = Await.result(f, 200.milliseconds)
     //println(out)
-    out
+    BoundingBox.build.move(out).tile(Tile(_map.tilePixelWidth, _map.tilePixelHeight)).get
   }
 }

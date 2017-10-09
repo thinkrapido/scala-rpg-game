@@ -28,7 +28,7 @@ class Location extends Actor with MapPosition with Tick {
     case SetDestination(_, "visual", uuid: UUID) =>
       visual_uuid = uuid
       Storage.visualsRegistry ! UpdateVisual(uuid, "position", this)
-    case GetDestination(_, "curr") => sender ! SetDestination(null, "next", curr)
+    case GetDestination(_, "curr") => sender ! SetDestination(null, "next", curr.position)
     case PoisonPill => destroy
   }
 

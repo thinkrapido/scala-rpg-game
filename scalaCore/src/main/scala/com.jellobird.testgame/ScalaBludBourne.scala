@@ -5,7 +5,7 @@ import com.badlogic.gdx.{Game, Gdx}
 import com.jellobird.testgame.assets.AssetManager
 import com.jellobird.testgame.input.InputObserver
 import com.jellobird.testgame.maps.Map.MapEnum
-import com.jellobird.testgame.maps.ProxyLocation
+import com.jellobird.testgame.maps.{ProxyLocation, Tile}
 import com.jellobird.testgame.storage.Storage
 import com.jellobird.testgame.storage.Storage.ScreenType._
 import com.jellobird.testgame.screen.GameScreen
@@ -43,7 +43,7 @@ class ScalaBludBourne extends Game {
   }
 
   def setPlayerOnMap(x: GameScreen) = {
-    val playerLocator = Storage.actorSystem.actorOf(Props(new PlayerLocation(x.map.startPosition)))
+    val playerLocator = Storage.actorSystem.actorOf(Props(new PlayerLocation(x.map.startPosition, new Tile(x.map.tilePixelWidth, x.map.tilePixelHeight))))
     playerLocator ! SetDestination(null, "next", x.map.startPosition)
 
     val playerRef = Storage.actorSystem.actorOf(Props(new Player(playerLocator)), "player")

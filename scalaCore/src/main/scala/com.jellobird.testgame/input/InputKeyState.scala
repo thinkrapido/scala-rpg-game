@@ -21,7 +21,7 @@ case class InputKeyState(val key: Int) {
   override def hashCode() = key.##
 
   override def equals (that: Any): Boolean = that match {
-    case k @ Int => key == k
+    case k: Int => key == k
     case InputKeyState(k) => key == k
     case _ => false
   }
