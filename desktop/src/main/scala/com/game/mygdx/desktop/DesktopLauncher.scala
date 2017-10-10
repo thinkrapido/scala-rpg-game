@@ -11,8 +11,8 @@ object DesktopLauncher {
     val config: LwjglApplicationConfiguration = new LwjglApplicationConfiguration
     config.title = "Scala BludBourne"
     config.useGL30 = false
-    config.width = 800
-    config.height = 600
+    config.width = 1800
+    config.height = 1600
     val app: Application = new LwjglApplication(new ScalaBludBourne, config)
     Gdx.app = app
     Gdx.app.setLogLevel(Application.LOG_DEBUG)

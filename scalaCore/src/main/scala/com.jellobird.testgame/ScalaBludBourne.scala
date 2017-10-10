@@ -6,11 +6,10 @@ import com.jellobird.testgame.assets.AssetManager
 import com.jellobird.testgame.input.InputObserver
 import com.jellobird.testgame.maps.Map.MapEnum
 import com.jellobird.testgame.maps.{ProxyLocation, Tile}
+import com.jellobird.testgame.player.{Player, PlayerLocation}
+import com.jellobird.testgame.screen.GameScreen
 import com.jellobird.testgame.storage.Storage
 import com.jellobird.testgame.storage.Storage.ScreenType._
-import com.jellobird.testgame.screen.GameScreen
-import com.jellobird.testgame.player.{Player, PlayerLocation}
-import com.jellobird.testgame.maps.LocationsRegistry.SetDestination
 import com.jellobird.testgame.visuals.Visual.SpriteMap
 
 /**
@@ -43,8 +42,8 @@ class ScalaBludBourne extends Game {
   }
 
   def setPlayerOnMap(x: GameScreen) = {
-    val playerLocator = Storage.actorSystem.actorOf(Props(new PlayerLocation(x.map.startPosition, new Tile(x.map.tilePixelWidth, x.map.tilePixelHeight))))
-    playerLocator ! SetDestination(null, "next", x.map.startPosition)
+    val playerLocator = Storage.actorSystem.actorOf(Props(new PlayerLocation(x.map.startPosition, new Tile(1, 1))))
+    //playerLocator ! SetDestination(null, "next", x.map.startPosition)
 
     val playerRef = Storage.actorSystem.actorOf(Props(new Player(playerLocator)), "player")
     val locator = Storage.actorSystem.actorOf(Props(new ProxyLocation(playerLocator, x.map)))

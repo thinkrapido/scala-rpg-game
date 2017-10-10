@@ -34,7 +34,7 @@ abstract class Map(val currentMap: MapEnum.Value) {
       .map(_.scale(1.0f / tilePixelWidth, 1.0f / tilePixelHeight))
       .toList
 
-  def testCollision(box: BoundingBox): Boolean = collisionBoxes.map(box.test(_)).foldLeft(false)((a, b) => a || b)
+  def testCollision(box: BoundingBox): Boolean = collisionBoxes.map(_.test(box)).foldLeft(false)((a, b) => a || b)
 
   def getCoordinatesFromMapObject(obj: MapObject): Vector2 = {
     val props = obj.getProperties

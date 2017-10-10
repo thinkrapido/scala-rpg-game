@@ -10,6 +10,8 @@ import com.jellobird.testgame.maps.LocationsRegistry.SetDestination
 class PlayerLocation(val startPosition: Vector2, tile: Tile) extends Location {
 
   override val _last: BoundingBox = BoundingBox.build.move(startPosition).tile(tile).get
+  override val _next: BoundingBox = _last
+  override val _helper: BoundingBox = _last
 
   override def penalty: Float = 1f
 

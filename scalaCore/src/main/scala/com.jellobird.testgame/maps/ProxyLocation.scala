@@ -30,7 +30,6 @@ class ProxyLocation(private var proxy: ActorRef, private val _map: Map) extends 
       .mapTo[SetDestination]
       .map(curr => curr.payload.asInstanceOf[Vector2])
     val out = Await.result(f, 200.milliseconds)
-    //println(out)
-    BoundingBox.build.move(out).tile(Tile(_map.tilePixelWidth, _map.tilePixelHeight)).get
+    BoundingBox.build.move(out).tile(Tile(1, 1)).get
   }
 }

@@ -37,7 +37,7 @@ class MainGameScreen extends GameScreen {
     if( renderer == null ) {
       renderer = new OrthogonalTiledMapRenderer(map.tiledMap);
     }
-    Storage.viewport = new FillViewport(map.tilePixelWidth * tilesVisible,map.tilePixelHeight * tilesVisible,Storage.camera)
+    Storage.viewport = new FillViewport(map.tilePixelWidth * tilesVisible,map.tilePixelHeight * tilesVisible, Storage.camera)
     Storage.viewport.apply()
     batch = new SpriteBatch()
   }

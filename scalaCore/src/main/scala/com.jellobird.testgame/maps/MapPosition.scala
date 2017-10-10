@@ -32,7 +32,7 @@ trait MapPosition {
   var lastScaleFactor = 0f
   def curr: BoundingBox = {
     val dest = nextDestination
-    if (_last.position.len() == 0) { _last.position.set(dest.position); _last }
+    if (_last.position.len() == 0) _last.position.set(dest.position);
     if (dest.position.epsilonEquals(_last.position, epsilon)) _next.position.set(dest.position)
     else {
       _helper.position.set(dest.position).sub(_last.position)
@@ -46,6 +46,8 @@ trait MapPosition {
       _next.position.set(_helper.position.scl(lastScaleFactor).add(_last.position))
     }
     _next
+    //println(dest, path)
+    //dest
   }
 
   def setDestination(box: BoundingBox): Unit = {
