@@ -5,7 +5,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.math.Vector2
 import com.jellobird.testgame.maps.Map
 import com.jellobird.testgame.storage.Storage
-import com.jellobird.testgame.maps.LocationsRegistry.Process
+import com.jellobird.testgame.maps.PositionsRegistry.Process
 
 trait GameScreen extends ScreenAdapter {
 

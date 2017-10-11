@@ -9,7 +9,7 @@ import com.jellobird.testgame.input.InputEvents.KeyEvents
 import com.jellobird.testgame.input.{InputEvents, InputKeyState}
 import com.jellobird.testgame.input.InputKeyState._
 import com.jellobird.testgame.storage.Storage
-import com.jellobird.testgame.maps.LocationsRegistry.SetDestination
+import com.jellobird.testgame.maps.PositionsRegistry.SetDestination
 import com.jellobird.testgame.utils.DelayFunction
 import com.jellobird.testgame.visuals.Visual
 import com.jellobird.testgame.visuals.Visual.SpriteMap
@@ -18,7 +18,7 @@ import com.jellobird.testgame.visuals.VisualsRegistry.{CreateVisual, UpdateVisua
 /**
   * Created by jbc on 04.12.16.
   */
-class Player(val location: ActorRef) extends Actor {
+class Player(val position: ActorRef) extends Actor {
 
   import scala.concurrent.duration._
 
@@ -34,13 +34,13 @@ class Player(val location: ActorRef) extends Actor {
     case k @ KeyEvents(ks) =>
 
       if (k.direction != Visual.State.HOLD) {
-        location ! SetDestination(null, "oneStepFurther", InputEvents.vector(k.direction))
+        position ! SetDestination(null, "oneStepFurther", InputEvents.vector(k.direction))
         Storage.visualsRegistry ! UpdateVisual(visual_uuid, "state", k.direction)
         delayHoldVisual.renew
       }
 
     case VisualCreated(uuid) =>
       visual_uuid = uuid
-      location ! SetDestination(null, "visual", uuid)
+      position ! SetDestination(null, "visual", uuid)
   }
 }

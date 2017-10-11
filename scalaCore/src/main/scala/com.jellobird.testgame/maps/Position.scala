@@ -5,7 +5,7 @@ import java.util.UUID
 import akka.actor.{Actor, PoisonPill}
 import com.badlogic.gdx.math.Vector2
 import com.jellobird.testgame.storage.Storage
-import LocationsRegistry._
+import PositionsRegistry._
 import com.jellobird.testgame.input.InputObserver
 import com.jellobird.testgame.time.Tick
 import com.jellobird.testgame.time.TickerRegistry.{RegisterTickerObserver, UnRegisterTickerObserver}
@@ -15,7 +15,7 @@ import com.jellobird.testgame.visuals.VisualsRegistry.UpdateVisual
 /**
   * Created by jbc on 01.12.16.
   */
-class Location extends Actor with MapPosition with Tick {
+class Position extends Actor with MapPosition with Tick {
 
   var uuid: UUID = null
   var visual_uuid: UUID = null
@@ -23,7 +23,7 @@ class Location extends Actor with MapPosition with Tick {
   register
 
   override def receive: Receive = {
-    case LocationCreated(uuid) => this.uuid = uuid
+    case PositionCreated(uuid) => this.uuid = uuid
     case SetDestination(_, "next", vec: Vector2) => setDestination(vec)
     case SetDestination(_, "visual", uuid: UUID) =>
       visual_uuid = uuid
@@ -34,14 +34,14 @@ class Location extends Actor with MapPosition with Tick {
 
   def register = {
     if (uuid == null) {
-      Storage.locationsRegistry ! RegisterLocation(self)
+      Storage.positionsRegistry ! RegisterPosition(self)
       Storage.tickerRegistry ! RegisterTickerObserver("input:keys:notify", this)
     }
   }
 
   def destroy = {
     if (uuid != null) {
-      Storage.locationsRegistry ! DestroyLocation(uuid)
+      Storage.positionsRegistry ! DestroyPosition(uuid)
       Storage.tickerRegistry ! UnRegisterTickerObserver("input:keys:notify", this)
     }
   }

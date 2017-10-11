@@ -1,13 +1,13 @@
 package com.jellobird.testgame.player
 
 import com.badlogic.gdx.math.Vector2
-import com.jellobird.testgame.maps.{BoundingBox, Location, Tile}
-import com.jellobird.testgame.maps.LocationsRegistry.SetDestination
+import com.jellobird.testgame.maps.{BoundingBox, Position, Tile}
+import com.jellobird.testgame.maps.PositionsRegistry.SetDestination
 
 /**
   * Created by jbc on 03.12.16.
   */
-class PlayerLocation(val startPosition: Vector2, tile: Tile) extends Location {
+class PlayerPosition(val startPosition: Vector2, tile: Tile) extends Position {
 
   override val _last: BoundingBox = BoundingBox.build.move(startPosition).tile(tile).get
   override val _next: BoundingBox = _last

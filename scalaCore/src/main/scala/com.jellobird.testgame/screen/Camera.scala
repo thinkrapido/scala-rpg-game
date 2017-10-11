@@ -5,7 +5,7 @@ import akka.pattern.ask
 import akka.util.Timeout
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.{Vector2, Vector3}
-import com.jellobird.testgame.maps.LocationsRegistry.{GetDestination, SetDestination}
+import com.jellobird.testgame.maps.PositionsRegistry.{GetDestination, SetDestination}
 
 import scala.concurrent.{Await, ExecutionContext}
 import scala.concurrent.duration._
@@ -15,15 +15,15 @@ import scala.concurrent.duration._
   */
 class Camera extends OrthographicCamera {
 
-  var location: ActorRef = null
+  var pos: ActorRef = null
 
   override def update(): Unit = {
 
     implicit val ec = ExecutionContext.Implicits.global
     implicit val timeout = Timeout(300.milliseconds)
 
-    if (location != null) {
-      val f = ask(location, GetDestination(null, "curr"))
+    if (pos != null) {
+      val f = ask(pos, GetDestination(null, "curr"))
         .mapTo[SetDestination]
         .map { curr =>
           val vec = new Vector3(curr.payload.asInstanceOf[Vector2].cpy().scl(GameScreen.current.map.tilePixelWidth), 0)

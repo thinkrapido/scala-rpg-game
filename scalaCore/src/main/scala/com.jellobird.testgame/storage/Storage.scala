@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.jellobird.testgame.assets.AssetManager
-import com.jellobird.testgame.maps.LocationsRegistry
+import com.jellobird.testgame.maps.PositionsRegistry
 import com.jellobird.testgame.screen.{Camera, MainGameScreen}
 import com.jellobird.testgame.time.TickerRegistry
 import com.jellobird.testgame.visuals.VisualsRegistry
@@ -13,7 +13,7 @@ object Storage {
 
   val actorSystem = ActorSystem("testgame")
 
-  val locationsRegistry = actorSystem.actorOf(LocationsRegistry.props)
+  val positionsRegistry = actorSystem.actorOf(PositionsRegistry.props)
 
   val visualsRegistry = actorSystem.actorOf(VisualsRegistry.props)
 
