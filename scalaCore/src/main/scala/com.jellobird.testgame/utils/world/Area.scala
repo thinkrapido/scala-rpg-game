@@ -1,5 +1,9 @@
 package com.jellobird.testgame.utils.world
 
+import com.jellobird.testgame.utils.world.Area.AreaRelation
+
+import scala.util.{Success, Failure, Try}
+
 /**
   * Created by Romeo Disca on 10/11/2017.
   */
@@ -10,7 +14,10 @@ case class Area(location: Location, range: Range) extends Scale[Area] {
   val right = location.x + range.width
   val bottom = location.y
 
-  def boundingBox(area: Area): Area = {
+  def hit(location: Location): Boolean =
+    location.x >= left && location.x <= right && location.y >= bottom && location.y <= top
+
+  private def boundingBox(area: Area): Area = {
 
     val top = Math.max(this.top, area.top)
     val left = Math.min(this.left, area.left)
@@ -20,7 +27,7 @@ case class Area(location: Location, range: Range) extends Scale[Area] {
     Area(Location(left, bottom), Range(right - left, top - bottom))
   }
 
-  def intersect(area: Area): Area = {
+  private def intersect(area: Area): Area = {
 
     val top = Math.min(this.top, area.top)
     val left = Math.max(this.left, area.left)
@@ -30,11 +37,20 @@ case class Area(location: Location, range: Range) extends Scale[Area] {
     Area(Location(left, bottom), Range(right - left, top - bottom))
   }
 
-  def hit(location: Location): Boolean =
-    location.x >= left && location.x <= right && location.y >= bottom && location.y <= top
-
-  def overlap(area: Area): Boolean =
+  private def overlap(area: Area): Boolean =
     intersect(area).range.area == 0
+
+  def relate(other: Area): AreaRelation = {
+    import Area._
+    val boundingBox = boundingBox(other)
+    Try(intersect(other)) match {
+      case Success(intersection) =>
+        if (intersection == this) Contains(this, other)
+        else if (intersection == other) Contains(other, this)
+        else Overlap(intersection, boundingBox)
+      case Failure(_) => None
+    }
+  }
 
   override def scale(factor: Float) = Area(location.scale(factor), range.scale(factor))
 
@@ -48,5 +64,14 @@ case class Area(location: Location, range: Range) extends Scale[Area] {
 
   def transform(location: Location, factor: Float) = Area(this.location.move(location), range.scale(factor))
   def transformBy(location: Location, factor: Float) = Area(this.location.moveBy(location), range.scale(factor))
+
+}
+
+object Area {
+
+  sealed abstract trait AreaRelation
+  case object None extends AreaRelation
+  case class Contains(inner: Area, outer: Area) extends AreaRelation
+  case class Overlap(intersection: Area, boundingBox: Area) extends AreaRelation
 
 }
