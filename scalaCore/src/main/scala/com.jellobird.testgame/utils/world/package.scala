@@ -27,7 +27,7 @@ package object world {
 
   implicit def Range2Distance(range: Range): Distance =
     Distance(
-      Try(Math.atan(range.height / range.width).toFloat).getOrElse(0),
+      normalizeRad(Try(Math.atan(range.height / range.width).toFloat).getOrElse(0)),
       Math.sqrt(range.width * range.width + range.height * range.height).toFloat
     )
 
@@ -36,7 +36,7 @@ package object world {
 
   implicit def Location2Distance(location: Location): Distance =
     Distance(
-      Try(Math.atan(location.y / location.x).toFloat).getOrElse(0),
+      normalizeRad(Try(Math.atan(location.y / location.x).toFloat).getOrElse(0)),
       Math.sqrt(location.x * location.x + location.y * location.y).toFloat
     )
 
@@ -46,8 +46,19 @@ package object world {
   implicit def Vector22Range(vec: Vector2): Range = Range(vec.x, vec.y)
   implicit def Range2Vector2(range: Range): Vector2 = new Vector2(range.x, range.y)
 
-  implicit def Vector22Distance(vec: Vector2): Distance = Distance(vec.angleRad(), vec.dst2(Vector2.Zero))
+  implicit def Vector22Distance(vec: Vector2): Distance = Distance(normalizeRad(vec.angleRad()), vec.dst2(Vector2.Zero))
   implicit def Distance2Vector2(distance: Distance): Vector2 = Location2Vector2(distance)
 
   def ratio(numerator: Float, denominator: Float): Option[Float] = Try(numerator / denominator).toOption
+  def normalizeRad(rad: Float): Float = {
+    if (rad > Math.PI * 2) {
+      normalizeRad((rad - Math.PI * 2).toFloat)
+    }
+    else if (rad < 0) {
+      normalizeRad((rad + Math.PI * 2).toFloat)
+    }
+    else {
+      rad
+    }
+  }
 }

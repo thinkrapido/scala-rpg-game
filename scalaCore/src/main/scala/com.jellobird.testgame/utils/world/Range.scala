@@ -5,6 +5,9 @@ package com.jellobird.testgame.utils.world
   */
 case class Range(width: Float, height: Float) extends Scale[Range] with Transform[Range] {
 
+  require(width >= 0)
+  require(height >= 0)
+
   val area = width * height
 
   override def scale(factor: Float) = Range(width * factor, height * factor)
@@ -19,5 +22,8 @@ case class Range(width: Float, height: Float) extends Scale[Range] with Transfor
   }
 
   override def transform(location: Location, factor: Float = 1) = moveBy(location).scale(factor)
+
+  def matches(range: Range, epsilon: Float = 0) =
+    (Math.abs(width - range.width) < epsilon) && (Math.abs(height - range.height) < epsilon)
 
 }
