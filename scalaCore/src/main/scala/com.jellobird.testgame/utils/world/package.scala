@@ -49,4 +49,5 @@ package object world {
   implicit def Vector22Distance(vec: Vector2): Distance = Distance(vec.angleRad(), vec.dst2(Vector2.Zero))
   implicit def Distance2Vector2(distance: Distance): Vector2 = Location2Vector2(distance)
 
+  def ratio(numerator: Float, denominator: Float): Option[Float] = Try(numerator / denominator).toOption
 }
