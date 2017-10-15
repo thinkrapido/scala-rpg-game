@@ -13,13 +13,13 @@ package object world {
   implicit def Distance2Location(distance: Distance): Location =
     Location(
       (distance.distance * Math.sin(Math.PI - distance.rad)).toFloat,
-      (distance.distance * Math.sin(distance.rad)).toFloat,
+      (distance.distance * Math.sin(distance.rad)).toFloat
     )
 
   implicit def Distance2Range(distance: Distance): Range =
     Range(
       (distance.distance * Math.sin(Math.PI - distance.rad)).toFloat,
-      (distance.distance * Math.sin(distance.rad)).toFloat,
+      (distance.distance * Math.sin(distance.rad)).toFloat
     )
 
   implicit def Range2Location(range: Range): Location =
@@ -44,7 +44,7 @@ package object world {
   implicit def Location2Vector2(location: Location): Vector2 = new Vector2(location.x, location.y)
 
   implicit def Vector22Range(vec: Vector2): Range = Range(vec.x, vec.y)
-  implicit def Range2Vector2(range: Range): Vector2 = new Vector2(range.x, range.y)
+  implicit def Range2Vector2(range: Range): Vector2 = new Vector2(range.width, range.height)
 
   implicit def Vector22Distance(vec: Vector2): Distance = Distance(normalizeRad(vec.angleRad()), vec.dst2(Vector2.Zero))
   implicit def Distance2Vector2(distance: Distance): Vector2 = Location2Vector2(distance)

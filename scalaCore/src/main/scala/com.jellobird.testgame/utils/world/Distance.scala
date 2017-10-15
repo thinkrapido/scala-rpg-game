@@ -10,6 +10,7 @@ case class Distance(rad: Float, distance: Float) extends Scale[Distance] with Tr
   require(distance >= 0)
 
   val deg = rad * 180 / Math.PI
+  lazy val normal = Distance(rad, 1)
 
   override def scale(factor: Float) = Distance(rad * factor, distance)
 

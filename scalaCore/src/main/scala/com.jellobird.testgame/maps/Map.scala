@@ -1,10 +1,13 @@
 package com.jellobird.testgame.maps
 
+import com.badlogic.gdx.maps.MapObject
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
-import Map._
-import com.badlogic.gdx.maps.{MapLayer, MapObject, MapProperties}
 import com.badlogic.gdx.math.Vector2
+import com.jellobird.testgame.maps.Map._
 import com.jellobird.testgame.storage.Storage
+import com.jellobird.testgame.utils.world.Area.Overlap
+import com.jellobird.testgame.utils.world.{Area, Location, Range}
+
 import scala.collection.JavaConverters._
 /**
   * Created by jbc on 27.11.16.
@@ -20,21 +23,25 @@ abstract class Map(val currentMap: MapEnum.Value) {
   val tilePixelHeight: Float = _properties.getTileHeight
   val pixelWidth: Float = width * tilePixelWidth
   val pixelHeight: Float = height * tilePixelHeight
-  val collisionBoxes: List[BoundingBox] = tiledMap
+  val collisionBoxes: List[Area] = tiledMap
       .getLayers
       .get(Layer.COLLISION_LAYER.toString)
       .getObjects.asScala
       .map(_.getProperties)
-      .map(p => BoundingBox(
-        p.get("x").asInstanceOf[Float],
-        p.get("y").asInstanceOf[Float],
-        p.get("width").asInstanceOf[Float],
-        p.get("height").asInstanceOf[Float]
+      .map(p => Area(
+        Location(p.get("x").asInstanceOf[Float], p.get("y").asInstanceOf[Float]),
+        Range(p.get("width").asInstanceOf[Float], p.get("height").asInstanceOf[Float])
       ))
-      .map(_.scale(1.0f / tilePixelWidth, 1.0f / tilePixelHeight))
+      .map(_.scale(1.0f / tilePixelWidth))
       .toList
 
-  def testCollision(box: BoundingBox): Boolean = collisionBoxes.map(_.test(box)).foldLeft(false)((a, b) => a || b)
+  def testCollision(box: Area): Boolean =
+    collisionBoxes
+      .map(_.relate(box) match {
+        case Overlap(_, _) => true
+        case _ => false
+      })
+      .exists(_ => true)
 
   def getCoordinatesFromMapObject(obj: MapObject): Vector2 = {
     val props = obj.getProperties

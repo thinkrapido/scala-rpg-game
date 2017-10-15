@@ -42,12 +42,12 @@ case class Area(location: Location, range: Range) extends Scale[Area] {
 
   def relate(other: Area): AreaRelation = {
     import Area._
-    val boundingBox = boundingBox(other)
+    val bBox = boundingBox(other)
     Try(intersect(other)) match {
       case Success(intersection) =>
         if (intersection == this) Contains(this, other)
         else if (intersection == other) Contains(other, this)
-        else Overlap(intersection, boundingBox)
+        else Overlap(intersection, bBox)
       case Failure(_) => None
     }
   }

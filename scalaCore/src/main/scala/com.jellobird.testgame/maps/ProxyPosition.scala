@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2
 import com.jellobird.testgame.storage.Storage
 import PositionsRegistry.{GetDestination, SetDestination}
 import akka.util.Timeout
+import com.jellobird.testgame.utils.world.{Area, Range}
 
 import scala.concurrent.{Await, ExecutionContext}
 import scala.concurrent.duration._
@@ -22,7 +23,7 @@ class ProxyPosition(private var proxy: ActorRef, private val _map: Map) extends 
     case SetDestination(_, "position", actorRef: ActorRef) => proxy = actorRef
   }
 
-  override def curr: BoundingBox = {
+  override def curr: Area = {
     implicit val ec = ExecutionContext.Implicits.global
     implicit val timeout = Timeout(300.milliseconds)
 
@@ -30,6 +31,6 @@ class ProxyPosition(private var proxy: ActorRef, private val _map: Map) extends 
       .mapTo[SetDestination]
       .map(curr => curr.payload.asInstanceOf[Vector2])
     val out = Await.result(f, 200.milliseconds)
-    BoundingBox.build.move(out).tile(Tile(1, 1)).get
+    Area(out, Range(1, 1))
   }
 }

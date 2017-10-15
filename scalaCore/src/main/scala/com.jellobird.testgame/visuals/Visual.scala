@@ -25,7 +25,7 @@ class Visual(val animation: Animation) {
   def render(batch: SpriteBatch): Unit = {
     if (position != null) {
       val tr = animation.textureRegion(direction)
-      mapPosition.set(position.curr.position).scl(GameScreen.current.map.tilePixelWidth)
+      mapPosition.set(position.curr.location).scl(GameScreen.current.map.tilePixelWidth)
       batch.draw(tr, mapPosition.x, mapPosition.y)
     }
   }

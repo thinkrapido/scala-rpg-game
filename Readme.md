@@ -14,6 +14,7 @@ Yours,
 
 Romeo
 
+**Currently are some performace issues while using case classes and not pure Vector2 objects for calculation, so the actors run into timeouts and this will be fixed soon or I reset to prior (working) revision.**
 
 # Next Milestones
 
