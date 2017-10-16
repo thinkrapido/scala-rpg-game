@@ -43,7 +43,7 @@ class ScalaBludBourne extends Game {
   }
 
   def setPlayerOnMap(x: GameScreen) = {
-    val playerLocator = Storage.actorSystem.actorOf(Props(new PlayerPosition(x.map.startPosition, Range(1, 1))))
+    val playerLocator = Storage.actorSystem.actorOf(Props(new PlayerPosition(x.map.startPosition, new Range(1, 1))))
     //playerLocator ! SetDestination(null, "next", x.map.startPosition)
 
     val playerRef = Storage.actorSystem.actorOf(Props(new Player(playerLocator)), "player")

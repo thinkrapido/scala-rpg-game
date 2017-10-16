@@ -7,7 +7,7 @@ import scala.util.{Success, Failure, Try}
 /**
   * Created by Romeo Disca on 10/11/2017.
   */
-case class Area(location: Location, range: Range) extends Scale[Area] {
+class Area(val location: Location, val range: Range) {
 
   val top = location.y + range.height
   val left = location.x
@@ -24,7 +24,10 @@ case class Area(location: Location, range: Range) extends Scale[Area] {
     val right = Math.max(this.right, area.right)
     val bottom = Math.min(this.bottom, area.bottom)
 
-    Area(Location(left, bottom), Range(right - left, top - bottom))
+    location.move((left, bottom))
+    range.move((right - left, top - bottom))
+
+    this
   }
 
   private def intersect(area: Area): Area = {
@@ -34,7 +37,10 @@ case class Area(location: Location, range: Range) extends Scale[Area] {
     val right = Math.min(this.right, area.right)
     val bottom = Math.max(this.bottom, area.bottom)
 
-    Area(Location(left, bottom), Range(right - left, top - bottom))
+    location.move((left, bottom))
+    range.move((right - left, top - bottom))
+
+    this
   }
 
   private def overlap(area: Area): Boolean =
@@ -52,18 +58,18 @@ case class Area(location: Location, range: Range) extends Scale[Area] {
     }
   }
 
-  override def scale(factor: Float) = Area(location.scale(factor), range.scale(factor))
+  def scale(factor: Float) = { location.scale(factor); range.scale(factor); this }
 
-  def move(location: Location) = Area(this.location.move(location), range)
-  def moveBy(location: Location) = Area(this.location.moveBy(location), range)
+  def move(location: Location) = { this.location.move(location); this }
+  def moveBy(location: Location) = { this.location.moveBy(location); this }
 
-  def rearange(range: Range) = Area(location, this.range.move(range))
-  def rearangeBy(range: Range) = Area(location, this.range.moveBy(range))
+  def rearange(range: Range) = { this.range.move(range); this }
+  def rearangeBy(range: Range) = { this.range.moveBy(range); this }
 
-  def rotate(rad: Float) = Area(location.rotate(rad), range)
+  def rotate(rad: Float) = { location.rotate(rad); this }
 
-  def transform(location: Location, factor: Float) = Area(this.location.move(location), range.scale(factor))
-  def transformBy(location: Location, factor: Float) = Area(this.location.moveBy(location), range.scale(factor))
+  def transform(location: Location, factor: Float) = { this.location.move(location); range.scale(factor); this }
+  def transformBy(location: Location, factor: Float) = { this.location.moveBy(location); range.scale(factor); this }
 
 }
 

@@ -10,9 +10,9 @@ import com.jellobird.testgame.utils.world.{Area, Range}
   */
 class PlayerPosition(val startPosition: Vector2, tile: Range) extends Position {
 
-  _last = Area(startPosition, tile)
-  _next = _last
-  _helper = _last
+  override val _last: Area = new Area(startPosition, tile)
+  override val _next: Area = _last
+  override val _helper: Area = _last
 
   override def penalty: Float = 1f
 

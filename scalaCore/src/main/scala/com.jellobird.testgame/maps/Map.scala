@@ -28,9 +28,9 @@ abstract class Map(val currentMap: MapEnum.Value) {
       .get(Layer.COLLISION_LAYER.toString)
       .getObjects.asScala
       .map(_.getProperties)
-      .map(p => Area(
-        Location(p.get("x").asInstanceOf[Float], p.get("y").asInstanceOf[Float]),
-        Range(p.get("width").asInstanceOf[Float], p.get("height").asInstanceOf[Float])
+      .map(p => new Area(
+        new Location(p.get("x").asInstanceOf[Float], p.get("y").asInstanceOf[Float]),
+        new Range(p.get("width").asInstanceOf[Float], p.get("height").asInstanceOf[Float])
       ))
       .map(_.scale(1.0f / tilePixelWidth))
       .toList
