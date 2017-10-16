@@ -24,8 +24,8 @@ class Area(val location: Location, val range: Range) {
     val right = Math.max(this.right, area.right)
     val bottom = Math.min(this.bottom, area.bottom)
 
-    location.move((left, bottom))
-    range.move((right - left, top - bottom))
+    location.moveTo(implicitly[Location](left, bottom))
+    range.moveTo(implicitly[Range](right - left, top - bottom))
 
     this
   }
@@ -37,8 +37,8 @@ class Area(val location: Location, val range: Range) {
     val right = Math.min(this.right, area.right)
     val bottom = Math.max(this.bottom, area.bottom)
 
-    location.move((left, bottom))
-    range.move((right - left, top - bottom))
+    location.moveTo(implicitly[Location](left, bottom))
+    range.moveTo(implicitly[Range](right - left, top - bottom))
 
     this
   }
@@ -60,15 +60,15 @@ class Area(val location: Location, val range: Range) {
 
   def scale(factor: Float) = { location.scale(factor); range.scale(factor); this }
 
-  def move(location: Location) = { this.location.move(location); this }
+  def move(location: Location) = { this.location.moveTo(location); this }
   def moveBy(location: Location) = { this.location.moveBy(location); this }
 
-  def rearange(range: Range) = { this.range.move(range); this }
-  def rearangeBy(range: Range) = { this.range.moveBy(range); this }
+  def rearrange(range: Range) = { this.range.moveTo(range); this }
+  def rearrangeBy(range: Range) = { this.range.moveBy(range); this }
 
-  def rotate(rad: Float) = { location.rotate(rad); this }
+  def rotate(rad: Float) = { location.rotateTo(rad); this }
 
-  def transform(location: Location, factor: Float) = { this.location.move(location); range.scale(factor); this }
+  def transform(location: Location, factor: Float) = { this.location.moveTo(location); range.scale(factor); this }
   def transformBy(location: Location, factor: Float) = { this.location.moveBy(location); range.scale(factor); this }
 
 }

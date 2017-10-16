@@ -14,4 +14,9 @@ class Location(vector: Vector2) extends Vector(vector) {
   def x = vector.x
   def y = vector.y
 
+  override def normal = new Location(vector nor)
+}
+
+object Location {
+  def fromPolar(rad: Float, distance: Float) = new Location(((distance * Math.sin(Math.PI - rad)).toFloat, (distance * Math.sin(rad)).toFloat))
 }

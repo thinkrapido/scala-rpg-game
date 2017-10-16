@@ -14,13 +14,13 @@ Yours,
 
 Romeo
 
-**Currently are some performace issues while using case classes and not pure Vector2 objects for calculation, so the actors run into timeouts and this will be fixed soon or I reset to prior (working) revision.**
+**Need to fix Player Movement.**
 
 # Next Milestones
 
+- Player Movement
 - collision detection and pathfinding
 
 # Accomplished Milestones
 
-- Player Movement
 - Displaying Player on Map

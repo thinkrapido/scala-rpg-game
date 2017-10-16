@@ -19,4 +19,9 @@ class Range(vector: Vector2) extends Vector(vector) {
 
   val area = width * height
 
+  override def normal = new Range(vector nor)
+}
+
+object Range {
+  def fromPolar(rad: Float, distance: Float) = new Range(((distance * Math.sin(Math.PI - rad)).toFloat, (distance * Math.sin(rad)).toFloat))
 }

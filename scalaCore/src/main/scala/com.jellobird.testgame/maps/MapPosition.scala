@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2
 import com.jellobird.testgame.screen.GameScreen
 import com.jellobird.testgame.time.Tick
 import com.jellobird.testgame.utils.ScaleFactor
-import com.jellobird.testgame.utils.world.{Area, Distance, Location, Range}
+import com.jellobird.testgame.utils.world.{Area, Location, Range}
 
 /**
   * Created by jbc on 23.12.16.
@@ -26,25 +26,25 @@ trait MapPosition {
 
   def penalty: Float
   def currStep = step * penalty
-  def nextDestination: Area = path.dropWhile(_.location.epsilonEquals(_last.location, epsilon)) match {
+  def nextDestination: Area = path.dropWhile(_.location.matches(_last.location, epsilon)) match {
     case Nil => _last
     case head :: _ => head
   }
   var lastScaleFactor = 0f
   def curr: Area = {
     val dest = nextDestination
-    if (_last.location.len() == 0) _last.location.set(dest.location);
-    if (dest.location.epsilonEquals(_last.location, epsilon)) _next.location.set(dest.location)
+    if (_last.location.distance == 0) _last.location.moveTo(dest.location);
+    if (dest.location.matches(_last.location, epsilon)) _next.location.moveTo(dest.location)
     else {
-      _helper.location.set(dest.location).sub(_last.location)
-      if (_helper.location.len() > currStep) {
-        _helper.location.nor().scl(currStep)
+      _helper.location.moveTo(dest.location).moveBy(_last.location.inverse)
+      if (_helper.location.distance > currStep) {
+        _helper.location.normal.scale(currStep)
       }
       val factor = scaleFactor.factor
       if (factor > lastScaleFactor) {
         lastScaleFactor = factor
       }
-      _next.location.set(_helper.location.scl(lastScaleFactor).add(_last.location))
+      _next.location.moveTo(_helper.location.scale(lastScaleFactor).moveBy(_last.location))
     }
     _next
     //println(dest, path)
@@ -55,21 +55,21 @@ trait MapPosition {
     path = List(box)
   }
   def setDestination(vec: Vector2): Unit = {
-    setDestination(new Area(vec, _last.range))
+    setDestination(new Area(new Location(vec), _last.range))
   }
   def setPath(path: List[Area]): Unit = {
     this.path = path
   }
 
   def tick: Unit = {
-    _last.location.set(_next.location)
+    _last.location.moveTo(_next.location)
     lastScaleFactor = 0f
   }
 
   def nextMapPosition(direction: Vector2): Unit = {
-    val nextPos = direction.nor().scl(currStep).add(curr.location)
+    val nextPos = direction.nor().scl(currStep).add(curr.location.x, curr.location.y)
 
-    val next = new Area(nextPos, curr.range)
+    val next = new Area(new Location(nextPos), curr.range)
 
     if (!GameScreen.current.map.testCollision(next)) {
       setDestination(next)
