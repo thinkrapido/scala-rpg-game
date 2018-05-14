@@ -20,6 +20,7 @@ class Range(vector: Vector2) extends Vector(vector) {
   val area = width * height
 
   override def normal = new Range(vector nor)
+  override def copy = new Range(vec)
 }
 
 object Range {

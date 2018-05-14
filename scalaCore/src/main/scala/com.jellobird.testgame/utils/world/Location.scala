@@ -15,6 +15,7 @@ class Location(vector: Vector2) extends Vector(vector) {
   def y = vector.y
 
   override def normal = new Location(vector nor)
+  override def copy = new Location(vec)
 }
 
 object Location {

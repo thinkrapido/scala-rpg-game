@@ -17,7 +17,6 @@ trait MapPosition {
 
   val _last = new Area(new Location(0, 0), new Range(0, 0))
   val _next = _last
-  val _helper = _last
 
   val step: Float
   val scaleFactor: ScaleFactor
@@ -33,10 +32,13 @@ trait MapPosition {
   var lastScaleFactor = 0f
   def curr: Area = {
     val dest = nextDestination
-    if (_last.location.distance == 0) _last.location.moveTo(dest.location);
-    if (dest.location.matches(_last.location, epsilon)) _next.location.moveTo(dest.location)
+    if (dest.location.matches(_last.location, epsilon)) {
+      _next.location.moveTo(dest.location)
+      _last.location.moveTo(dest.location)
+    }
     else {
-      _helper.location.moveTo(dest.location).moveBy(_last.location.inverse)
+      val _helper: Area = new Area()
+      _helper.location.moveTo(dest.location).moveBy(_last.location.copy.inverse)
       if (_helper.location.distance > currStep) {
         _helper.location.normal.scale(currStep)
       }
@@ -44,10 +46,12 @@ trait MapPosition {
       if (factor > lastScaleFactor) {
         lastScaleFactor = factor
       }
-      _next.location.moveTo(_helper.location.scale(lastScaleFactor).moveBy(_last.location))
+      _helper.location.scale(lastScaleFactor)
+      _next.location.moveBy(_helper.location)
+      _last.location.moveTo(_next.location)
     }
-    _next
     //println(dest, path)
+    _next
     //dest
   }
 
@@ -68,9 +72,7 @@ trait MapPosition {
 
   def nextMapPosition(direction: Vector2): Unit = {
     val nextPos = direction.nor().scl(currStep).add(curr.location.x, curr.location.y)
-
     val next = new Area(new Location(nextPos), curr.range)
-
     if (!GameScreen.current.map.testCollision(next)) {
       setDestination(next)
     }

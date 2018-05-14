@@ -35,14 +35,14 @@ abstract class Map(val currentMap: MapEnum.Value) {
       .map(_.scale(1.0f / tilePixelWidth))
       .toList
 
-  def testCollision(box: Area): Boolean =
+  def testCollision(box: Area): Boolean = {
     collisionBoxes
       .map(_.relate(box) match {
         case Overlap(_, _) => true
         case _ => false
       })
       .exists(_ => true)
-
+  }
   def getCoordinatesFromMapObject(obj: MapObject): Vector2 = {
     val props = obj.getProperties
     val x = props.get("x").asInstanceOf[Float]

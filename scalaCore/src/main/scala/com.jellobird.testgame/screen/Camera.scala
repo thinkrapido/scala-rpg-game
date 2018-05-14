@@ -6,6 +6,7 @@ import akka.util.Timeout
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.{Vector2, Vector3}
 import com.jellobird.testgame.maps.PositionsRegistry.{GetDestination, SetDestination}
+import com.jellobird.testgame.utils.world.Area
 
 import scala.concurrent.{Await, ExecutionContext}
 import scala.concurrent.duration._
@@ -26,7 +27,7 @@ class Camera extends OrthographicCamera {
       val f = ask(pos, GetDestination(null, "curr"))
         .mapTo[SetDestination]
         .map { curr =>
-          val vec = new Vector3(curr.payload.asInstanceOf[Vector2].cpy().scl(GameScreen.current.map.tilePixelWidth), 0)
+          val vec = new Vector3(curr.payload.asInstanceOf[Area].location.vec.scl(GameScreen.current.map.tilePixelWidth), 0)
           position.set(vec)
         }
       Await.result(f, 500.milliseconds) // wait to avoid flickering of player

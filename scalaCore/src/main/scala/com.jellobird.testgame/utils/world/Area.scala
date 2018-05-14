@@ -1,13 +1,17 @@
 package com.jellobird.testgame.utils.world
 
+import java.util.Objects
+
 import com.jellobird.testgame.utils.world.Area.AreaRelation
 
-import scala.util.{Success, Failure, Try}
+import scala.util.{Failure, Success, Try}
 
 /**
   * Created by Romeo Disca on 10/11/2017.
   */
 class Area(val location: Location, val range: Range) {
+
+  def this() = this(new Location(0,0), new Range(0, 0))
 
   val top = location.y + range.height
   val left = location.x
@@ -17,46 +21,58 @@ class Area(val location: Location, val range: Range) {
   def hit(location: Location): Boolean =
     location.x >= left && location.x <= right && location.y >= bottom && location.y <= top
 
-  private def boundingBox(area: Area): Area = {
+  private def boundingBox(other: Area): Area = {
 
-    val top = Math.max(this.top, area.top)
-    val left = Math.min(this.left, area.left)
-    val right = Math.max(this.right, area.right)
-    val bottom = Math.min(this.bottom, area.bottom)
+    val top = Math.max(this.top, other.top)
+    val left = Math.min(this.left, other.left)
+    val right = Math.max(this.right, other.right)
+    val bottom = Math.min(this.bottom, other.bottom)
 
-    location.moveTo(implicitly[Location](left, bottom))
-    range.moveTo(implicitly[Range](right - left, top - bottom))
-
-    this
+    new Area(new Location(left, bottom), new Range(right - left, top - bottom))
   }
 
-  private def intersect(area: Area): Area = {
+  private def intersect(other: Area): Option[Area] = {
 
-    val top = Math.min(this.top, area.top)
-    val left = Math.max(this.left, area.left)
-    val right = Math.min(this.right, area.right)
-    val bottom = Math.max(this.bottom, area.bottom)
+    if (
+      contains(new Location(other.top, other.left)) ||
+      contains(new Location(other.top, other.right)) ||
+      contains(new Location(other.bottom, other.left)) ||
+      contains(new Location(other.bottom, other.right))
+    ) {
+      val top = Math.max(this.top, other.top)
+      val left = Math.max(this.left, other.left)
+      val right = Math.min(this.right, other.right)
+      val bottom = Math.min(this.bottom, other.bottom)
 
-    location.moveTo(implicitly[Location](left, bottom))
-    range.moveTo(implicitly[Range](right - left, top - bottom))
+      Some(new Area(new Location(left, top), new Range(right - left, bottom - top)))
 
-    this
+      }
+    else None
   }
 
-  private def overlap(area: Area): Boolean =
-    intersect(area).range.area == 0
+  private def contains(other: Area): Boolean = {
+    this.top >= other.top && this.bottom <= other.bottom && this.left <= other.bottom && this.right >= other.bottom
+  }
+  private def contains(point: Location): Boolean = {
+    return point.x >= this.left && point.x <= this.right && point.y >= this.top && point.y <= this.bottom
+  }
+
+  private def overlap(other: Area): Boolean =
+    intersect(other) match {
+      case Some(_) => true
+      case None => false
+    }
 
   def relate(other: Area): AreaRelation = {
     import Area._
     val bBox = boundingBox(other)
-    Try(intersect(other)) match {
-      case Success(intersection) =>
-        if (intersection == this) Contains(this, other)
-        else if (intersection == other) Contains(other, this)
+    intersect(other) match {
+      case Some(intersection) =>
+        if (intersection.equals(this)) Contains(this, other)
+        else if (intersection.equals(other)) Contains(other, this)
         else Overlap(intersection, bBox)
-      case Failure(_) => None
-    }
-  }
+      case _ => None
+    }                                                            }
 
   def scale(factor: Float) = { location.scale(factor); range.scale(factor); this }
 
@@ -70,6 +86,12 @@ class Area(val location: Location, val range: Range) {
 
   def transform(location: Location, factor: Float) = { this.location.moveTo(location); range.scale(factor); this }
   def transformBy(location: Location, factor: Float) = { this.location.moveBy(location); range.scale(factor); this }
+
+  override def hashCode(): Int = Objects.hash(location, range)
+  override def equals(obj: scala.Any): Boolean = obj match {
+    case a: Area => a.location.equals(location) && a.range.equals(range)
+    case _ => false
+  }
 
 }
 

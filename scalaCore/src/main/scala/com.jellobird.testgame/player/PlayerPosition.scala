@@ -12,7 +12,6 @@ class PlayerPosition(val startPosition: Vector2, tile: Range) extends Position {
 
   override val _last: Area = new Area(new Location(startPosition), tile)
   override val _next: Area = _last
-  override val _helper: Area = _last
 
   override def penalty: Float = 1f
 

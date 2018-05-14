@@ -29,8 +29,8 @@ class ProxyPosition(private var proxy: ActorRef, private val _map: Map) extends 
 
     val f = ask(proxy, GetDestination(null, "curr"))
       .mapTo[SetDestination]
-      .map(curr => curr.payload.asInstanceOf[Vector2])
-    val out = Await.result(f, 200.milliseconds)
-    new Area(new Location(out), new Range(1, 1))
+      .map(curr => curr.payload.asInstanceOf[Area])
+    Await.result(f, 200.milliseconds)
+    //new Area(new Location(out), new Range(1, 1))
   }
 }
