@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2
   * Created by Romeo Disca on 10/15/2017.
   */
 abstract class Vector(protected val vector: Vector2) {
+
   def scale(factor: Float) = { vector.scl(factor); this }
 
   def moveTo(other: Vector) = { vector.set(other.vector); this }
@@ -27,6 +28,9 @@ abstract class Vector(protected val vector: Vector2) {
 
   def normal: Vector
   def copy: Vector
+  def add(other: Vector): Vector
+  def sub(other: Vector): Vector
+  def mul(factor: Float): Vector
   def vec: Vector2 = vector.cpy()
 
   override def hashCode(): Int = vector.hashCode()

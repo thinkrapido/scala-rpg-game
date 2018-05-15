@@ -10,6 +10,7 @@ import com.jellobird.testgame.input.InputObserver
 import com.jellobird.testgame.time.Tick
 import com.jellobird.testgame.time.TickerRegistry.{RegisterTickerObserver, UnRegisterTickerObserver}
 import com.jellobird.testgame.utils.ScaleFactor
+import com.jellobird.testgame.utils.movement.Movement
 import com.jellobird.testgame.visuals.VisualsRegistry.UpdateVisual
 
 /**
@@ -46,8 +47,5 @@ class Position extends Actor with MapPosition with Tick {
     }
   }
 
-  override val step: Float = .5f
-  override val scaleFactor: ScaleFactor = InputObserver.NOTIFY_INTERVALL
-
-  override def penalty: Float = 1f
+  override val movement: Movement = Movement(.5f, 1f)//InputObserver.NOTIFY_INTERVALL.factor
 }

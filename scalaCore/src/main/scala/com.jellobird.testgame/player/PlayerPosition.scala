@@ -10,10 +10,7 @@ import com.jellobird.testgame.utils.world.{Area, Location, Range}
   */
 class PlayerPosition(val startPosition: Vector2, tile: Range) extends Position {
 
-  override val _last: Area = new Area(new Location(startPosition), tile)
-  override val _next: Area = _last
-
-  override def penalty: Float = 1f
+  override lazy val _last: Area = new Area(new Location(startPosition), tile)
 
   override def receive: Receive = super.receive orElse {
     case SetDestination(_, "oneStepFurther", payload: Vector2) => nextMapPosition(payload)

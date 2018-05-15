@@ -21,6 +21,10 @@ class Range(vector: Vector2) extends Vector(vector) {
 
   override def normal = new Range(vector nor)
   override def copy = new Range(vec)
+  override def add(other: Vector): Vector = new Range(vec.add(other.vec))
+  override def sub(other: Vector): Vector = new Range(vec.sub(other.vec))
+  override def mul(factor: Float): Vector = new Range(vec.scl(factor))
+
 }
 
 object Range {
